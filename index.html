@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>बेलदार समाज - परिचय पत्र</title>
+    <meta name="description" content="बेलदार समाज परिचय पत्र - dd/mm/yy, बग फ्री, A4 PDF.">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --gold: #b8860b;
+            --gold-light: #d4af37;
+            --red: #c0392b;
+            --blue: #1e40af;
+            --bg: #fdf6e3;
+            --border: #8b5a2b;
+            --text: #333;
+            --stamp-red: rgba(192, 57, 43, 0.25);
+            --stamp-blue: rgba(30, 64, 175, 0.25);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Serif Devanagari', serif;
+            background: linear-gradient(135deg, #fdf6e3 0%, #f5e6cc 100%);
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .form-container {
+            max-width: 520px;
+            margin: 20px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(184, 134, 11, 0.2);
+            border: 3px solid var(--gold-light);
+        }
+
+        .logo {
+            text-align: center; margin-bottom: 8px;
+            font-family: 'Dancing Script', cursive; font-size: 2.2em; color: var(--red);
+            font-weight: 700; letter-spacing: 1.5px;
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .society-heading {
+            text-align: center;
+            font-size: 2.1em;
+            font-weight: 900;
+            margin: 12px 0 18px;
+            background: linear-gradient(45deg, var(--gold), var(--gold-light), var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(184, 134, 11, 0.2);
+        }
+
+        h2 { text-align: center; color: var(--red); margin: 20px 0; font-size: 1.6em; }
+
+        label { display: flex; align-items: center; margin: 15px 0 6px; font-weight: bold; color: var(--red); font-size: 0.95em; }
+        label i { margin-right: 6px; color: var(--gold); width: 18px; text-align: center; }
+
+        input, select, textarea {
+            width: 100%; padding: 12px 14px; border: 2px solid #ffe4b3; border-radius: 12px;
+            font-family: inherit; font-size: 0.95em; background: #fffdf0;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); }
+
+        .required::after { content: " *"; color: #e74c3c; }
+        .row { display: flex; gap: 12px; margin-bottom: 5px; }
+        .row > div { flex: 1; }
+
+        .photo-preview {
+            width: 120px; height: 160px; margin: 15px auto; border: 5px solid var(--gold);
+            border-radius: 15px; overflow: hidden; background: #fdfaf5;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 48px; color: var(--gold); cursor: pointer;
+        }
+        .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+        .final-btn, .action-btn {
+            display: inline-block; padding: 12px 28px; border: none; border-radius: 30px;
+            font-weight: bold; font-size: 1.1em; cursor: pointer; margin: 10px 6px;
+        }
+        .final-btn { background: var(--gold-light); color: white; }
+        .final-btn:hover { background: var(--gold); }
+        .action-btn { background: #48bb78; color: white; }
+        .action-btn:hover { background: #38a169; }
+        .reset-btn { background: #e74c3c !important; }
+        .pdf-btn { background: #c0392b !important; }
+
+        .success { display: none; text-align: center; padding: 20px; background: #d4edda; color: #155724; border-radius: 16px; margin-top: 20px; border: 2px solid #c3e6cb; }
+
+        #saveJpeg, #savePdf { display: none; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #biodataPrint, #biodataPrint * { visibility: visible; }
+            #biodataPrint { position: absolute; left: 0; top: 0; width: 100%; background: white !important; }
+            .form-container, .success, #saveJpeg, #savePdf { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div class="logo">श्री गणेशाय नमः</div>
+    <div class="society-heading">बेलदार समाज</div>
+    <h2>परिचय पत्र भरा</h2>
+
+    <label for="title" class="required">ची. / कु.</label>
+    <select id="title" required>
+        <option value="">निवडा</option>
+        <option value="ची.">ची. (वर)</option>
+        <option value="कु.">कु. (वधू)</option>
+    </select>
+
+    <div style="text-align:center; margin:20px 0;">
+        <label class="required" style="display:block;">पासपोर्ट साइज फोटो</label>
+        <input type="file" id="photo" accept="image/*" required style="display:none;">
+        <div class="photo-preview" id="preview">
+            <i class="fas fa-camera"></i>
+        </div>
+    </div>
+
+    <form id="biodataForm" novalidate>
+        <label class="required">नाव</label>
+        <input type="text" id="name" required>
+
+        <div class="row">
+            <div><label class="required">जन्म तारीख</label><input type="date" id="dob" required></div>
+            <div><label>जन्म वेळ</label><input type="time" id="time"></div>
+        </div>
+
+        <label>जन्म ठिकाण</label>
+        <input type="text" id="birthplace">
+
+        <label class="required">वर्ण</label>
+        <select id="varna" required>
+            <option value="">निवडा</option>
+            <option>गौर</option>
+            <option>सावळा</option>
+            <option>मध्यम</option>
+        </select>
+
+        <label class="required">शिक्षण</label>
+        <input type="text" id="education" required>
+
+        <label class="required">उंची</label>
+        <input type="text" id="height" required>
+
+        <label>व्यवसाय</label>
+        <input type="text" id="occupation">
+
+        <label class="required">अपेक्षा</label>
+        <textarea id="expectations" required rows="3"></textarea>
+
+        <label class="required">वडीलांचे नाव</label>
+        <input type="text" id="father" required>
+
+        <label class="required">पत्ता</label>
+        <textarea id="address" required rows="2"></textarea>
+
+        <label>वडीलांचा व्यवसाय</label>
+        <input type="text" id="father_occupation">
+
+        <label>शेती</label>
+        <input type="text" id="farming">
+
+        <label>भाऊ</label>
+        <input type="text" id="brothers">
+
+        <label>बहिण</label>
+        <input type="text" id="sisters">
+
+        <label>मामाचे नाव</label>
+        <input type="text" id="mama">
+
+        <label>संपर्क व्यक्ती</label>
+        <input type="text" id="contact_person">
+
+        <label class="required">मोबाईल</label>
+        <input type="tel" id="contact" required pattern="[0-9]{10}">
+
+        <div style="text-align:center; margin-top:25px;">
+            <button type="button" class="final-btn" onclick="finalizeBiodata()">तयार करा</button>
+            <button type="button" class="action-btn reset-btn" onclick="resetForm()">रिसेट</button>
+        </div>
+    </form>
+
+    <div class="success" id="successMsg">
+        <strong>परिचय पत्र तयार!</strong><br><br>
+        <button class="action-btn" onclick="printBiodata()">प्रिंट</button>
+        <button class="action-btn" id="saveJpeg">JPEG</button>
+        <button class="action-btn pdf-btn" id="savePdf">PDF</button>
+    </div>
+</div>
+
+<!-- A4 Print Area -->
+<div id="biodataPrint" style="position:absolute; left:-9999px; top:0; width:800px; background:#fdf6e3; padding:30px; font-family:'Noto Serif Devanagari',serif; font-size:15px; color:var(--text);">
+    <div style="max-width:700px; margin:0 auto; background:white; padding:40px 35px; border:8px double var(--gold); position:relative; min-height:950px; box-shadow:0 0 20px rgba(0,0,0,0.1);">
+
+        <!-- Beldar Samaj Stamp -->
+        <div style="position:absolute; top:25px; left:30px; width:120px; height:38px; border:3px solid var(--stamp-blue); background:white; display:flex; align-items:center; justify-content:center; z-index:10; border-radius:6px; opacity:0.7;">
+            <span style="color:var(--stamp-red); font-weight:bold; font-size:15px; letter-spacing:0.8px;">
+                Beldar Samaj
+            </span>
+        </div>
+
+        <!-- Corner Flowers -->
+        <div style="position:absolute; top:-30px; left:-30px; width:100px; height:100px; background:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M50 15 Q35 30 20 50 Q35 70 50 85 Q65 70 80 50 Q65 30 50 15%22 fill=%22none%22 stroke=%22#b8860b%22 stroke-width=%224%22/><circle cx=%2250%22 cy=%2250%22 r=%226%22 fill=%22#c0392b%22/></svg>') no-repeat; background-size:contain;"></div>
+        <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M50 15 Q35 30 20 50 Q35 70 50 85 Q65 70 80 50 Q65 30 50 15%22 fill=%22none%22 stroke=%22#b8860b%22 stroke-width=%224%22 transform=%22scaleX(-1)%22/><circle cx=%22-50%22 cy=%2250%22 r=%226%22 fill=%22#c0392b%22/></svg>') no-repeat; background-size:contain;"></div>
+        <div style="position:absolute; bottom:-30px; left:-30px; width:100px; height:100px; background:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M50 15 Q35 30 20 50 Q35 70 50 85 Q65 70 80 50 Q65 30 50 15%22 fill=%22none%22 stroke=%22#b8860b%22 stroke-width=%224%22 transform=%22scaleY(-1)%22/><circle cx=%2250%22 cy=%22-50%22 r=%226%22 fill=%22#c0392b%22/></svg>') no-repeat; background-size:contain;"></div>
+        <div style="position:absolute; bottom:-30px; right:-30px; width:100px; height:100px; background:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M50 15 Q35 30 20 50 Q35 70 50 85 Q65 70 80 50 Q65 30 50 15%22 fill=%22none%22 stroke=%22#b8860b%22 stroke-width=%224%22 transform=%22scale(-1)%22/><circle cx=%22-50%22 cy=%22-50%22 r=%226%22 fill=%22#c0392b%22/></svg>') no-repeat; background-size:contain;"></div>
+
+        <!-- Header -->
+        <div style="text-align:center; margin-bottom:30px; margin-top:60px;">
+            <div style="font-family:'Dancing Script',cursive; font-size:28px; color:#c0392b; margin-bottom:8px;">श्री गणेशाय नमः</div>
+            <div style="font-size:24px; font-weight:bold; color:var(--gold); border-bottom:3px double var(--gold); padding-bottom:8px; display:inline-block;">परिचय पत्र</div>
+        </div>
+
+        <!-- Main Info -->
+        <table style="width:100%; margin-bottom:25px; line-height:1.6;">
+            <tr>
+                <td style="width:35%; padding:6px 0; font-weight:bold; color:var(--border);">नाव</td>
+                <td style="width:40%; padding:6px 0;">: <span id="print_name"></span></td>
+                <td style="width:25%; text-align:center; vertical-align:top;">
+                    <div style="width:110px; height:145px; border:5px solid var(--gold); border-radius:12px; overflow:hidden; margin:0 auto; background:#fdfaf5;">
+                        <img id="print_photo" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                </td>
+            </tr>
+            <tr><td style="font-weight:bold; color:var(--border);">जन्म ता.</td><td>: <span id="print_dob"></span></td><td></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">जन्म ठिकाण</td><td>: <span id="print_birthplace"></span></td><td></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">वर्ण</td><td>: <span id="print_varna"></span></td><td></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">शिक्षण</td><td>: <span id="print_education"></span></td><td></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">उंची</td><td>: <span id="print_height"></span></td><td></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">व्यवसाय</td><td>: <span id="print_occupation"></span></td><td></td></tr>
+        </table>
+
+        <!-- Expectations -->
+        <div style="background:#fdfaf5; padding:14px; border-left:5px solid var(--gold); border-radius:8px; margin:20px 0; font-size:14px; line-height:1.6;">
+            <strong style="color:var(--red);">अपेक्षा:</strong> <span id="print_expectations"></span>
+        </div>
+
+        <!-- Family -->
+        <div style="text-align:center; font-size:20px; color:var(--gold); margin:20px 0 10px; font-weight:bold; border-top:2px dashed var(--gold); padding-top:10px;">कुटुंबाची माहिती</div>
+        <table style="width:100%; margin-bottom:20px; line-height:1.6;">
+            <tr><td style="width:35%; padding:5px 0; font-weight:bold; color:var(--border);">वडीलांचे नाव</td><td>: <span id="print_father"></span></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">पत्ता</td><td>: <span id="print_address"></span></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">वडीलांचा व्यवसाय</td><td>: <span id="print_father_occupation"></span></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">शेती</td><td>: <span id="print_farming"></span></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">भाऊ</td><td>: <span id="print_brothers"></span></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">बहिण</td><td>: <span id="print_sisters"></span></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">मामाचे नाव</td><td>: <span id="print_mama"></span></td></tr>
+        </table>
+
+        <!-- Contact -->
+        <div style="text-align:center; font-size:20px; color:var(--gold); margin:25px 0 15px; font-weight:bold; border-top:2px dashed var(--gold); padding-top:10px;">संपर्क</div>
+        <div style="text-align:center; font-size:18px; color:var(--text);">
+            <div id="print_contact_person"></div>
+            <div>मो. : <span id="print_contact"></span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const el = {
+        title: document.getElementById('title'),
+        form: document.getElementById('biodataForm'),
+        photo: document.getElementById('photo'),
+        preview: document.getElementById('preview'),
+        success: document.getElementById('successMsg'),
+        biodataPrint: document.getElementById('biodataPrint'),
+        saveJpeg: document.getElementById('saveJpeg'),
+        savePdf: document.getElementById('savePdf')
+    };
+
+    let photoURL = '';
+
+    // Date formatter: yyyy-mm-dd → dd/mm/yy
+    function formatDateToDDMMYY(dateStr) {
+        if (!dateStr) return '—';
+        const [y, m, d] = dateStr.split('-');
+        const yy = y.slice(-2);
+        return `${d}/${m}/${yy}`;
+    }
+
+    el.preview.addEventListener('click', () => el.photo.click());
+    el.photo.addEventListener('change', () => {
+        const file = el.photo.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                el.preview.innerHTML = `<img src="${e.target.result}" alt="फोटो">`;
+                photoURL = e.target.result;
+                updatePrint();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function getFormData() {
+        const data = {};
+        el.form.querySelectorAll('input, select, textarea').forEach(input => {
+            if (input.id) data[input.id] = input.value.trim();
+        });
+        data.title = el.title.value;
+        return data;
+    }
+
+    function updatePrint() {
+        const d = getFormData();
+        const fullName = d.title ? `${d.title} ${d.name || ''}`.trim() : '';
+
+        document.getElementById('print_name').textContent = fullName || '—';
+        // Fixed: dd/mm/yy format
+        document.getElementById('print_dob').textContent = formatDateToDDMMYY(d.dob);
+        document.getElementById('print_birthplace').textContent = d.birthplace || '—';
+        document.getElementById('print_varna').textContent = d.varna || '—';
+        document.getElementById('print_education').textContent = d.education || '—';
+        document.getElementById('print_height').textContent = d.height || '—';
+        document.getElementById('print_occupation').textContent = d.occupation || '—';
+        document.getElementById('print_expectations').textContent = d.expectations || '—';
+        document.getElementById('print_father').textContent = d.father || '—';
+        document.getElementById('print_address').innerHTML = (d.address || '—').replace(/\n/g, '<br>');
+        document.getElementById('print_father_occupation').textContent = d.father_occupation || '—';
+        document.getElementById('print_farming').textContent = d.farming || '—';
+        document.getElementById('print_brothers').textContent = d.brothers || '—';
+        document.getElementById('print_sisters').textContent = d.sisters || '—';
+        document.getElementById('print_mama').textContent = d.mama || '—';
+        document.getElementById('print_contact_person').textContent = d.contact_person || '—';
+        document.getElementById('print_contact').textContent = d.contact || '—';
+
+        const photoImg = document.getElementById('print_photo');
+        photoImg.src = photoURL || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22110%22 height=%22145%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23fdfaf5%22/><text x=%2250%25%22 y=%2255%25%22 font-family=%22Arial%22 font-size=%2218%22 fill=%22%23b8860b%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>Photo</text></svg>';
+    }
+
+    function finalizeBiodata() {
+        if (!el.title.value) return alert("कृपया 'ची. / कु.' निवडा");
+        if (!el.form.checkValidity()) return el.form.reportValidity();
+        updatePrint();
+        el.form.style.display = 'none';
+        el.success.style.display = 'block';
+        el.saveJpeg.style.display = 'inline-block';
+        el.savePdf.style.display = 'inline-block';
+    }
+
+    function printBiodata() {
+        updatePrint();
+        window.print();
+    }
+
+    el.savePdf.addEventListener('click', () => {
+        updatePrint();
+        const { jsPDF } = window.jspdf;
+        html2canvas(el.biodataPrint.firstElementChild, { 
+            scale: 3,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#fdf6e3',
+            logging: false
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const width = pdf.internal.pageSize.getWidth();
+            const height = pdf.internal.pageSize.getHeight();
+            pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+            const name = document.getElementById('name').value.trim() || 'परिचय-पत्र';
+            pdf.save(`${el.title.value}${name}.pdf`);
+        });
+    });
+
+    el.saveJpeg.addEventListener('click', () => {
+        updatePrint();
+        html2canvas(el.biodataPrint.firstElementChild, { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+            const link = document.createElement('a');
+            const name = document.getElementById('name').value.trim() || 'परिचय-पत्र';
+            link.download = `${el.title.value}${name}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 1.0);
+            link.click();
+        });
+    });
+
+    function resetForm() {
+        if (!confirm("सर्व डेटा डिलीट होईल?")) return;
+        el.form.reset();
+        el.title.selectedIndex = 0;
+        el.preview.innerHTML = `<i class="fas fa-camera"></i>`;
+        photoURL = '';
+        el.success.style.display = 'none';
+        el.form.style.display = 'block';
+        el.saveJpeg.style.display = 'none';
+        el.savePdf.style.display = 'none';
+    }
+
+    // Live update
+    el.form.querySelectorAll('input, select, textarea').forEach(input => {
+        input.addEventListener('input', updatePrint);
+    });
+    el.title.addEventListener('change', updatePrint);
+</script>
+
+</body>
+</html>
