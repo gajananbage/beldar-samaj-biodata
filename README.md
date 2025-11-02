@@ -20,7 +20,7 @@
 ![Screenshot](screenshot.png)
 
 ## कॉन्ट्रीब्यूट
-Pull Request पाठवा! Issues साठी [ओपन करा](https://github.com/gajananbage/beldar-samaj-biodata-generator/issues).
+Pull Request पाठवा! Issues साठी [ओपन करा](https://github.com/gajananbage/beldar-samaj-biodata/issues).
 
 **समाजासाठी बनवले - समाजासाठी शेअर करा!** 🇮🇳
 
