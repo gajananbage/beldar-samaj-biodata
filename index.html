@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>बेलदार समाज - परिचय पत्र</title>
-    <meta name="description" content="बेलदार समाज परिचय पत्र - dd/mm/yy, बग फ्री, A4 PDF.">
+    <meta name="description" content="बेलदार समाज परिचय पत्र - जन्म वेळ, dd/mm/yy, बग फ्री, A4 PDF.">
     
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -30,7 +30,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Noto Serif Devanagari', serif;
+            font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
             background: linear-gradient(135deg, #fdf6e3 0%, #f5e6cc 100%);
             margin: 0;
             padding: 15px;
@@ -109,8 +109,32 @@
         @media print {
             body * { visibility: hidden; }
             #biodataPrint, #biodataPrint * { visibility: visible; }
-            #biodataPrint { position: absolute; left: 0; top: 0; width: 100%; background: white !important; }
+            #biodataPrint { position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
             .form-container, .success, #saveJpeg, #savePdf { display: none !important; }
+        }
+
+        /* A4 Print Area */
+        #biodataPrint {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            background: #fdf6e3;
+            font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
+            font-size: 14px;
+            color: var(--text);
+        }
+        #biodataPrint > div {
+            width: 100%;
+            min-height: 297mm;
+            padding: 20mm;
+            border: 8px double var(--gold);
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -129,7 +153,7 @@
     </select>
 
     <div style="text-align:center; margin:20px 0;">
-        <label class="required" style="display:block;">पासपोर्ट साइज फोटो</label>
+        <label for="photo" class="required" style="display:block;">पासपोर्ट साइज फोटो</label>
         <input type="file" id="photo" accept="image/*" required style="display:none;">
         <div class="photo-preview" id="preview">
             <i class="fas fa-camera"></i>
@@ -210,9 +234,8 @@
 </div>
 
 <!-- A4 Print Area -->
-<div id="biodataPrint" style="position:absolute; left:-9999px; top:0; width:800px; background:#fdf6e3; padding:30px; font-family:'Noto Serif Devanagari',serif; font-size:15px; color:var(--text);">
-    <div style="max-width:700px; margin:0 auto; background:white; padding:40px 35px; border:8px double var(--gold); position:relative; min-height:950px; box-shadow:0 0 20px rgba(0,0,0,0.1);">
-
+<div id="biodataPrint">
+    <div>
         <!-- Beldar Samaj Stamp -->
         <div style="position:absolute; top:25px; left:30px; width:120px; height:38px; border:3px solid var(--stamp-blue); background:white; display:flex; align-items:center; justify-content:center; z-index:10; border-radius:6px; opacity:0.7;">
             <span style="color:var(--stamp-red); font-weight:bold; font-size:15px; letter-spacing:0.8px;">
@@ -239,11 +262,12 @@
                 <td style="width:40%; padding:6px 0;">: <span id="print_name"></span></td>
                 <td style="width:25%; text-align:center; vertical-align:top;">
                     <div style="width:110px; height:145px; border:5px solid var(--gold); border-radius:12px; overflow:hidden; margin:0 auto; background:#fdfaf5;">
-                        <img id="print_photo" style="width:100%; height:100%; object-fit:cover;">
+                        <img id="print_photo" style="width:100%; height:100%; object-fit:cover;" crossOrigin="anonymous">
                     </div>
                 </td>
             </tr>
             <tr><td style="font-weight:bold; color:var(--border);">जन्म ता.</td><td>: <span id="print_dob"></span></td><td></td></tr>
+            <tr><td style="font-weight:bold; color:var(--border);">जन्म वेळ</td><td>: <span id="print_time"></span></td><td></td></tr>
             <tr><td style="font-weight:bold; color:var(--border);">जन्म ठिकाण</td><td>: <span id="print_birthplace"></span></td><td></td></tr>
             <tr><td style="font-weight:bold; color:var(--border);">वर्ण</td><td>: <span id="print_varna"></span></td><td></td></tr>
             <tr><td style="font-weight:bold; color:var(--border);">शिक्षण</td><td>: <span id="print_education"></span></td><td></td></tr>
@@ -295,8 +319,7 @@
     function formatDateToDDMMYY(dateStr) {
         if (!dateStr) return '—';
         const [y, m, d] = dateStr.split('-');
-        const yy = y.slice(-2);
-        return `${d}/${m}/${yy}`;
+        return `${d}/${m}/${y.slice(-2)}`;
     }
 
     el.preview.addEventListener('click', () => el.photo.click());
@@ -327,8 +350,10 @@
         const fullName = d.title ? `${d.title} ${d.name || ''}`.trim() : '';
 
         document.getElementById('print_name').textContent = fullName || '—';
-        // Fixed: dd/mm/yy format
         document.getElementById('print_dob').textContent = formatDateToDDMMYY(d.dob);
+        document.getElementById('print_time').textContent = d.time ? 
+            new Date('1970-01-01T' + d.time).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', hour12: true}) 
+            : '—';
         document.getElementById('print_birthplace').textContent = d.birthplace || '—';
         document.getElementById('print_varna').textContent = d.varna || '—';
         document.getElementById('print_education').textContent = d.education || '—';
@@ -361,13 +386,16 @@
 
     function printBiodata() {
         updatePrint();
-        window.print();
+        setTimeout(() => window.print(), 300);
     }
 
-    el.savePdf.addEventListener('click', () => {
+    function captureAndDownload(type) {
         updatePrint();
-        const { jsPDF } = window.jspdf;
-        html2canvas(el.biodataPrint.firstElementChild, { 
+        const element = el.biodataPrint.firstElementChild;
+        const photoImg = document.getElementById('print_photo');
+        if (photoURL) photoImg.crossOrigin = 'anonymous';
+
+        html2canvas(element, {
             scale: 3,
             useCORS: true,
             allowTaint: true,
@@ -375,25 +403,26 @@
             logging: false
         }).then(canvas => {
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const width = pdf.internal.pageSize.getWidth();
-            const height = pdf.internal.pageSize.getHeight();
-            pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-            const name = document.getElementById('name').value.trim() || 'परिचय-पत्र';
-            pdf.save(`${el.title.value}${name}.pdf`);
-        });
-    });
+            const name = (el.title.value + (document.getElementById('name').value || 'परिचय-पत्र')).trim();
 
-    el.saveJpeg.addEventListener('click', () => {
-        updatePrint();
-        html2canvas(el.biodataPrint.firstElementChild, { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
-            const link = document.createElement('a');
-            const name = document.getElementById('name').value.trim() || 'परिचय-पत्र';
-            link.download = `${el.title.value}${name}.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 1.0);
-            link.click();
+            if (type === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+                pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
+                pdf.save(`${name}.pdf`);
+            } else {
+                const a = document.createElement('a');
+                a.download = `${name}.jpg`;
+                a.href = imgData;
+                a.click();
+            }
         });
-    });
+    }
+
+    el.savePdf.onclick = () => captureAndDownload('pdf');
+    el.saveJpeg.onclick = () => captureAndDownload('jpeg');
 
     function resetForm() {
         if (!confirm("सर्व डेटा डिलीट होईल?")) return;
