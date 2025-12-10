@@ -153,10 +153,10 @@
             font-weight:bold; color:var(--gold); border-bottom:3px double var(--gold); padding-bottom:8px; display:inline-block;
         }
         .traditional-table {
-            width:100%; margin-bottom:25px; line-height:1.7; /* लाइन हाईट थोडी वाढवली */
+            width:100%; margin-bottom:25px; line-height:1.8; /* लाईफ हाईट सुधारित */
         }
         .traditional-table td {
-            padding:8px 0; /* Padding वाढवले */
+            padding:8px 0; 
             vertical-align:top;
         }
         .traditional-table .photo-cell {
@@ -170,7 +170,7 @@
             color:var(--border);
         }
         
-        /* >>> PROFILE PICTURE SIZE (Traditional - Updated to 200px x 263px) <<< */
+        /* PROFILE PICTURE SIZE (Traditional - 200px x 263px) */
         .traditional-photo-box {
             width:200px; 
             height:263px; 
@@ -183,7 +183,6 @@
         .traditional-photo-box img {
             width:100%; height:100%; object-fit:cover;
         }
-        /* >>> END SIZE CHANGE <<< */
         
         .traditional-expectation {
             background:#fdfaf5; padding:16px; border-left:5px solid var(--gold); border-radius:8px; margin:20px 0; font-size:16px; line-height:1.6;
@@ -266,6 +265,14 @@
             width:100%; height:100%; object-fit:cover;
         }
 
+        /* Modern template text size fix (0.9em to 1em) */
+        .modern-info-wrapper table, .modern-info-wrapper p, .modern-info-wrapper div {
+            font-size: 1em !important; /* Fixed font size for clarity */
+        }
+        .modern-info-wrapper table {
+            line-height: 1.7;
+        }
+
 
         /* --- Print Media Query --- */
         @media print {
@@ -330,7 +337,7 @@
         <input type="text" id="education" required>
 
         <label class="required">उंची</label>
-        <input type="text" id="height" required>
+        <input type="text" id="height" required placeholder="उदा. 5 फूट 8 इंच किंवा 172cm">
 
         <label>व्यवसाय</label>
         <input type="text" id="occupation">
@@ -360,7 +367,7 @@
         <input type="text" id="mama">
 
         <label>संपर्क व्यक्ती</label>
-        <input type="text" id="contact_person">
+        <input type="text" id="contact_person" placeholder="संपर्कासाठी व्यक्तीचे नाव (रिकामे असल्यास, अर्जदार स्वतः)">
 
         <label class="required">मोबाईल</label>
         <input type="tel" id="contact" required pattern="[0-9]{10}">
@@ -430,7 +437,7 @@
 
         <div class="traditional-family-header">संपर्क</div>
         <div class="traditional-contact">
-            <div id="print_contact_person"></div>
+            <div><strong style="color:var(--red);">संपर्क व्यक्ती:</strong> <span id="print_contact_person"></span></div>
             <div>मो. : <span id="print_contact"></span></div>
         </div>
     </div>
@@ -460,7 +467,7 @@
 
             <div class="modern-info-wrapper">
                 <h3 class="modern-heading">👤 वैयक्तिक माहिती</h3>
-                <table style="width:100%; font-size:0.9em; line-height:1.8;">
+                <table style="width:100%; line-height:1.7;">
                     <tr><td style="width:35%; font-weight:bold;">जन्म ता. / वेळ</td><td>: <span id="print_dob_modern"></span> / <span id="print_time_modern"></span></td></tr>
                     <tr><td style="font-weight:bold;">जन्म ठिकाण</td><td>: <span id="print_birthplace_modern"></span></td></tr>
                     <tr><td style="font-weight:bold;">वर्ण / उंची</td><td>: <span id="print_varna_modern"></span> / <span id="print_height_modern"></span></td></tr>
@@ -472,12 +479,12 @@
         <div style="clear:both;"></div>
 
         <h3 class="modern-heading" style="margin:20px 0 10px;">⭐ अपेक्षा</h3>
-        <div style="background:var(--modern-light-bg); padding:10px; border-left:3px solid var(--modern-accent); border-radius:4px; font-size:0.9em; line-height: 1.6;">
+        <div style="background:var(--modern-light-bg); padding:10px; border-left:3px solid var(--modern-accent); border-radius:4px; font-size:1em; line-height: 1.6;">
              <span id="print_expectations_modern"></span>
         </div>
 
         <h3 class="modern-heading" style="margin:20px 0 10px;">👨‍👩‍👧‍👦 कौटुंबिक माहिती</h3>
-        <table style="width:100%; font-size:0.9em; line-height:1.8;">
+        <table style="width:100%; line-height:1.7;">
             <tr><td style="width:35%; font-weight:bold;">वडीलांचे नाव</td><td>: <span id="print_father_modern"></span></td></tr>
             <tr><td style="font-weight:bold;">व्यवसाय / शेती</td><td>: <span id="print_father_occupation_modern"></span> / <span id="print_farming_modern"></span></td></tr>
             <tr><td style="font-weight:bold;">भाऊ / बहिण</td><td>: <span id="print_brothers_modern"></span> / <span id="print_sisters_modern"></span></td></tr>
@@ -485,7 +492,7 @@
         </table>
 
         <h3 class="modern-heading" style="margin:20px 0 10px;">📞 संपर्क</h3>
-        <div style="font-size:0.9em; line-height: 1.6;">
+        <div style="line-height: 1.6;">
             <p><span style="font-weight:bold; color:var(--modern-accent);">संपर्क व्यक्ती:</span> <span id="print_contact_person_modern"></span></p>
             <p><span style="font-weight:bold; color:var(--modern-accent);">मोबाईल:</span> <span id="print_contact_modern"></span></p>
             <p style="margin-top:5px;"><span style="font-weight:bold; color:var(--modern-accent);">पत्ता:</span> <span id="print_address_modern"></span></p>
@@ -550,6 +557,9 @@
         const timeFormatted = d.time ? 
             new Date('1970-01-01T' + d.time).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', hour12: true}) 
             : '—';
+        
+        // FIX 5: Handle empty contact person
+        const contactPersonDisplay = d.contact_person || 'स्वतः';
 
         document.getElementById(`print_name${suffix}`).textContent = fullName || '—';
         document.getElementById(`print_dob${suffix}`).textContent = formatDateToDDMMYY(d.dob);
@@ -557,7 +567,7 @@
         document.getElementById(`print_birthplace${suffix}`).textContent = d.birthplace || '—';
         document.getElementById(`print_varna${suffix}`).textContent = d.varna || '—';
         document.getElementById(`print_education${suffix}`).textContent = d.education || '—';
-        document.getElementById(`print_height${suffix}`).textContent = d.height || '—';
+        document.getElementById(`print_height${suffix}`).textContent = d.height || '—'; // FIX 2: Height unit is assumed to be included by user
         document.getElementById(`print_occupation${suffix}`).textContent = d.occupation || '—';
         document.getElementById(`print_expectations${suffix}`).textContent = d.expectations || '—';
         document.getElementById(`print_father${suffix}`).textContent = d.father || '—';
@@ -567,7 +577,7 @@
         document.getElementById(`print_brothers${suffix}`).textContent = d.brothers || '—';
         document.getElementById(`print_sisters${suffix}`).textContent = d.sisters || '—';
         document.getElementById(`print_mama${suffix}`).textContent = d.mama || '—';
-        document.getElementById(`print_contact_person${suffix}`).textContent = d.contact_person || '—';
+        document.getElementById(`print_contact_person${suffix}`).textContent = contactPersonDisplay;
         document.getElementById(`print_contact${suffix}`).textContent = d.contact || '—';
 
         const photoImg = document.getElementById(`print_photo${suffix}`);
@@ -578,7 +588,6 @@
         photoImg.src = photoURL || `data:image/svg+xml;utf8,${encodeURIComponent(placeholderSvg)}`;
     }
     
-    // Function to ensure only one template is active/marked for printing
     function setTemplateActive(templateId) {
         el.biodataPrint.classList.remove('active');
         el.biodataPrintModern.classList.remove('active');
@@ -590,8 +599,19 @@
     }
 
     function finalizeBiodata() {
-        if (!el.title.value) return alert("कृपया 'ची. / कु.' निवडा");
-        if (!el.form.checkValidity()) return el.form.reportValidity();
+        // BUG FIX 1: Ensure form validation passes first
+        if (!el.title.value) {
+             alert("कृपया 'ची. / कु.' निवडा");
+             return;
+        }
+        if (!el.photo.files.length) {
+            alert("कृपया पासपोर्ट साइज फोटो निवडा.");
+            return;
+        }
+        if (!el.form.checkValidity()) {
+            el.form.reportValidity();
+            return;
+        }
         
         updatePrintData('biodataPrint');
         updatePrintData('biodataPrintModern');
@@ -600,12 +620,10 @@
         el.success.style.display = 'block';
         el.downloadOptions.style.display = 'none'; 
         
-        // Ensure no template is currently active
         setTemplateActive(null);
     }
 
     function showTemplate(template) {
-        // 1. Hide success message and show download buttons
         el.success.style.display = 'none';
         el.downloadOptions.style.display = 'block'; 
 
@@ -616,26 +634,26 @@
     }
     
     function printBiodata() {
-        // The print CSS media query ensures only the element with class 'active' is visible for printing
         window.print();
     }
 
     function captureAndDownload(type) {
+        if (!currentTemplateId) {
+            alert("कृपया आधी टेम्पलेट निवडा.");
+            return;
+        }
         const element = document.getElementById(currentTemplateId).firstElementChild;
-        // Set crossOrigin attribute for CORS handling in canvas
         document.getElementById(currentTemplateId === 'biodataPrintModern' ? 'print_photo_modern' : 'print_photo').crossOrigin = 'anonymous';
         
         const backgroundColor = currentTemplateId === 'biodataPrintModern' ? 'white' : '#fdf6e3';
-        const name = (el.title.value + (document.getElementById('name').value || 'परिचय-पत्र')).trim() + (currentTemplateId === 'biodataPrintModern' ? '-ModernBW' : '-Traditional-NoSVG');
+        const name = (el.title.value + (document.getElementById('name').value || 'परिचय-पत्र')).trim() + (currentTemplateId === 'biodataPrintModern' ? '-ModernBW' : '-Traditional');
 
-        // Capture logic
         const originalParent = element.parentElement;
         const originalStyle = {
             position: originalParent.style.position,
             left: originalParent.style.left
         };
 
-        // Temporarily move to body and make visible
         originalParent.style.position = 'static';
         originalParent.style.left = 'auto';
         document.body.appendChild(originalParent);
@@ -649,7 +667,6 @@
         }).then(canvas => {
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
-            // Restore original position (move back off-screen)
             document.body.removeChild(originalParent);
             originalParent.style.position = originalStyle.position;
             originalParent.style.left = originalStyle.left;
@@ -667,6 +684,9 @@
                 a.href = imgData;
                 a.click();
             }
+        }).catch(error => {
+            console.error('Error during canvas creation:', error);
+            alert("टेम्पलेट डाउनलोड करताना त्रुटी आली. कृपया नंतर प्रयत्न करा.");
         });
     }
 
