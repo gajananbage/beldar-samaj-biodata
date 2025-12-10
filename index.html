@@ -6,7 +6,7 @@
     <title>बेलदार समाज - परिचय पत्र जनरेटर</title>
     <meta name="description" content="बेलदार समाज परिचय पत्र - भरणा व डाऊनलोड सुविधा.">
 
-    <link rel="manifest" href="/manifest.json"> 
+    <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#b8860b"> 
@@ -18,13 +18,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS STYLES (As provided previously) --- */
+        /* --- 1. GENERAL STYLES & VARIABLES --- */
         :root {
+            /* Traditional Colors */
             --gold: #b8860b;
             --gold-light: #d4af37;
             --red: #c0392b;
             --border: #8b5a2b;
             --text: #333;
+            
+            /* Modern B/W Colors */
             --modern-accent: #000000;
             --modern-light-bg: #f5f5f5;
         }
@@ -35,24 +38,72 @@
             font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
             background: linear-gradient(135deg, #fdf6e3 0%, #f5e6cc 100%);
             padding: 15px;
-            min-height: 100vh;
+            min-height: 10vh;
             overflow-x: hidden;
         }
 
-        .form-container { max-width: 520px; margin: 20px auto; background: white; padding: 35px; border-radius: 20px; box-shadow: 0 15px 35px rgba(184, 134, 11, 0.2); border: 3px solid var(--gold-light); }
-        .logo { text-align: center; margin-bottom: 8px; font-family: 'Dancing Script', cursive; font-size: 2.2em; color: var(--red); font-weight: 700; letter-spacing: 1.5px; background: linear-gradient(45deg, #c0392b, #e74c3c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .society-heading { text-align: center; font-size: 2.1em; font-weight: 900; margin: 12px 0 18px; background: linear-gradient(45deg, var(--gold), var(--gold-light), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(184, 134, 11, 0.2); }
+        /* --- LOGO STYLES (NEW) --- */
+        .app-logo {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .app-logo img {
+            width: 60px; /* Logo size for form */
+            height: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* --- 2. FORM STYLES --- */
+        .form-container {
+            max-width: 520px;
+            margin: 20px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(184, 134, 11, 0.2);
+            border: 3px solid var(--gold-light);
+        }
+
+        .society-heading {
+            text-align: center;
+            font-size: 2.1em;
+            font-weight: 900;
+            margin: 12px 0 18px;
+            background: linear-gradient(45deg, var(--gold), var(--gold-light), var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(184, 134, 11, 0.2);
+        }
+
         h2 { text-align: center; color: var(--red); margin: 20px 0; font-size: 1.6em; }
+
         label { display: flex; align-items: center; margin: 15px 0 6px; font-weight: bold; color: var(--red); font-size: 0.95em; }
         label i { margin-right: 6px; color: var(--gold); width: 18px; text-align: center; }
-        input, select, textarea { width: 100%; padding: 12px 14px; border: 2px solid #ffe4b3; border-radius: 12px; font-family: inherit; font-size: 0.95em; background: #fffdf0; }
+
+        input, select, textarea {
+            width: 100%; padding: 12px 14px; border: 2px solid #ffe4b3; border-radius: 12px;
+            font-family: inherit; font-size: 0.95em; background: #fffdf0;
+        }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); }
+
         .required::after { content: " *"; color: #e74c3c; }
         .row { display: flex; gap: 12px; margin-bottom: 5px; }
         .row > div { flex: 1; }
-        .photo-preview { width: 120px; height: 160px; margin: 15px auto; border: 5px solid var(--gold); border-radius: 15px; overflow: hidden; background: #fdfaf5; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 48px; color: var(--gold); cursor: pointer; }
+
+        .photo-preview {
+            width: 120px; height: 160px; margin: 15px auto; border: 5px solid var(--gold);
+            border-radius: 15px; overflow: hidden; background: #fdfaf5;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 48px; color: var(--gold); cursor: pointer;
+        }
         .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .final-btn, .action-btn { display: inline-block; padding: 12px 28px; border: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; cursor: pointer; margin: 10px 6px; }
+
+        .final-btn, .action-btn {
+            display: inline-block; padding: 12px 28px; border: none; border-radius: 30px;
+            font-weight: bold; font-size: 1.1em; cursor: pointer; margin: 10px 6px;
+        }
         .final-btn { background: var(--gold-light); color: white; }
         .final-btn:hover { background: var(--gold); }
         .action-btn { background: #48bb78; color: white; }
@@ -60,21 +111,173 @@
         .reset-btn { background: #e74c3c !important; }
         .pdf-btn { background: #c0392b !important; }
         .modern-btn { background: var(--modern-accent) !important; }
+
         .success { display: none; text-align: center; padding: 20px; background: #d4edda; color: #155724; border-radius: 16px; margin-top: 20px; border: 2px solid #c3e6cb; }
+
         #downloadOptions { display: none; }
+
+        /* --- 3. TEMPLATE 1: TRADITIONAL A4 Print Area (UPDATED TEXT SIZE) --- */
+        #biodataPrint {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            background: #fdf6e3;
+            font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
+            font-size: 16px; /* मुख्य फॉन्ट आकार वाढवला */
+            color: var(--text);
+        }
+        #biodataPrint > div {
+            width: 100%;
+            min-height: 297mm;
+            padding: 20mm;
+            border: 8px double var(--gold);
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .traditional-header {
+             text-align:center; margin-bottom:30px; margin-top:60px;
+        }
+        .traditional-header .logo-stamp {
+            position:absolute; top:20px; left:20px; width:45px; height:45px; border:2px solid var(--gold); background:white; z-index:10; border-radius:8px;
+        }
+        .traditional-header .logo-stamp img {
+            width:100%; height:100%; object-fit:contain; border-radius:6px;
+        }
+        .traditional-header div:last-child {
+            font-size:28px; /* परिचय पत्र हेडिंग आकार वाढवला */
+            font-weight:bold; color:var(--gold); border-bottom:3px double var(--gold); padding-bottom:8px; display:inline-block;
+        }
+        .traditional-table {
+            width:100%; margin-bottom:25px; line-height:1.7; /* लाइन हाईट थोडी वाढवली */
+        }
+        .traditional-table td {
+            padding:8px 0; /* Padding वाढवले */
+            vertical-align:top;
+        }
+        .traditional-table .photo-cell {
+            width:30%; 
+            text-align:center; 
+            vertical-align:top;
+        }
+        .traditional-table .label {
+            width:30%; 
+            font-weight:bold; 
+            color:var(--border);
+        }
         
-        /* Print Styles (Traditional and Modern) */
-        #biodataPrint, #biodataPrintModern {
-            position: absolute; left: -9999px; top: 0; width: 210mm; min-height: 297mm;
-            /* ... (Other Print styles omitted for brevity) ... */
+        /* >>> PROFILE PICTURE SIZE (Traditional - Updated to 200px x 263px) <<< */
+        .traditional-photo-box {
+            width:200px; 
+            height:263px; 
+            border:5px solid var(--gold); 
+            border-radius:12px; 
+            overflow:hidden; 
+            margin:0 auto; 
+            background:#fdfaf5;
         }
-        .traditional-photo-box, #biodataPrintModern > div > div:nth-of-type(3) > div:first-child > div:first-child {
-            width: 200px; height: 263px; /* Ensure photo size is consistent */
-            /* ... (Other Photo box styles omitted for brevity) ... */
+        .traditional-photo-box img {
+            width:100%; height:100%; object-fit:cover;
         }
+        /* >>> END SIZE CHANGE <<< */
+        
+        .traditional-expectation {
+            background:#fdfaf5; padding:16px; border-left:5px solid var(--gold); border-radius:8px; margin:20px 0; font-size:16px; line-height:1.6;
+        }
+        .traditional-family-header {
+             text-align:center; font-size:22px; /* कुटुंब/संपर्क हेडिंग आकार वाढवला */
+             color:var(--gold); margin:20px 0 10px; font-weight:bold; border-top:2px dashed var(--gold); padding-top:10px;
+        }
+        .traditional-contact {
+            text-align:center; font-size:20px; /* संपर्क मजकूर आकार वाढवला */
+            color:var(--text);
+        }
+
+        /* --- 4. TEMPLATE 2: MODERN B/W A4 Print Area --- */
+        #biodataPrintModern {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 8mm; 
+            font-family: 'Open Sans', 'Noto Sans Devanagari', sans-serif; 
+            font-size: 16px; 
+            color: var(--modern-accent); 
+        }
+        #biodataPrintModern > div {
+            width: 100%;
+            min-height: 297mm;
+            padding: 15mm;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            border: 4px solid var(--modern-accent); 
+            border-style: solid double;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .modern-heading {
+            color:var(--modern-accent); border-bottom:2px solid #ddd; padding-bottom:8px; margin-bottom:15px; font-size:1.4em; font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+        .modern-header-logo {
+            float: right; 
+            width: 50px; 
+            height: 50px; 
+            margin-left: 15px; 
+            border-radius: 8px;
+        }
+        .modern-header-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .modern-photo-info-container {
+            display: flex;
+            align-items: flex-start; 
+            margin-bottom: 20px;
+            gap: 20px; 
+        }
+        
+        .modern-photo-wrapper {
+            flex-shrink: 0; 
+            text-align: center;
+        }
+        
+        .modern-info-wrapper {
+            flex-grow: 1; 
+        }
+        
+        /* PROFILE PICTURE SIZE (Modern - 200x263) */
+        .modern-photo-box {
+            width: 200px; 
+            height: 263px; 
+            border:2px solid var(--modern-accent); 
+            border-radius:8px; 
+            overflow:hidden; 
+            background:#f5f5f5;
+        }
+        .modern-photo-box img {
+            width:100%; height:100%; object-fit:cover;
+        }
+
+
+        /* --- Print Media Query --- */
         @media print {
             body * { visibility: hidden; }
-            #biodataPrint.active, #biodataPrint.active *, #biodataPrintModern.active, #biodataPrintModern.active * { visibility: visible; position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
+            
+            /* Show only the active template for printing */
+            #biodataPrint.active, #biodataPrint.active * { visibility: visible; }
+            #biodataPrint.active { position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
+            
+            #biodataPrintModern.active, #biodataPrintModern.active * { visibility: visible; }
+            #biodataPrintModern.active { position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
+            
             .form-container, .success, #downloadOptions { display: none !important; }
         }
     </style>
@@ -82,7 +285,9 @@
 <body>
 
 <div class="form-container" id="inputFormContainer">
-    <div class="logo">श्री गणेशाय नमः</div>
+    <div class="app-logo">
+        <img src="/icons/apple-touch-icon.png" alt="बेलदार समाज लोगो">
+    </div>
     <div class="society-heading">बेलदार समाज</div>
     <h2>परिचय पत्र भरा</h2>
 
@@ -102,23 +307,63 @@
     </div>
 
     <form id="biodataForm" novalidate>
-        <label class="required">नाव</label><input type="text" id="name" required>
-        <div class="row"><div><label class="required">जन्म तारीख</label><input type="date" id="dob" required></div><div><label>जन्म वेळ</label><input type="time" id="time"></div></div>
-        <label>जन्म ठिकाण</label><input type="text" id="birthplace">
-        <label class="required">वर्ण</label><select id="varna" required><option value="">निवडा</option><option>गौर</option><option>सावळा</option><option>मध्यम</option></select>
-        <label class="required">शिक्षण</label><input type="text" id="education" required>
-        <label class="required">उंची</label><input type="text" id="height" required>
-        <label>व्यवसाय</label><input type="text" id="occupation">
-        <label class="required">अपेक्षा</label><textarea id="expectations" required rows="3"></textarea>
-        <label class="required">वडीलांचे नाव</label><input type="text" id="father" required>
-        <label class="required">पत्ता</label><textarea id="address" required rows="2"></textarea>
-        <label>वडीलांचा व्यवसाय</label><input type="text" id="father_occupation">
-        <label>शेती</label><input type="text" id="farming">
-        <label>भाऊ</label><input type="text" id="brothers">
-        <label>बहिण</label><input type="text" id="sisters">
-        <label>मामाचे नाव</label><input type="text" id="mama">
-        <label>संपर्क व्यक्ती</label><input type="text" id="contact_person">
-        <label class="required">मोबाईल</label><input type="tel" id="contact" required pattern="[0-9]{10}">
+        <label class="required">नाव</label>
+        <input type="text" id="name" required>
+
+        <div class="row">
+            <div><label class="required">जन्म तारीख</label><input type="date" id="dob" required></div>
+            <div><label>जन्म वेळ</label><input type="time" id="time"></div>
+        </div>
+
+        <label>जन्म ठिकाण</label>
+        <input type="text" id="birthplace">
+
+        <label class="required">वर्ण</label>
+        <select id="varna" required>
+            <option value="">निवडा</option>
+            <option>गौर</option>
+            <option>सावळा</option>
+            <option>मध्यम</option>
+        </select>
+
+        <label class="required">शिक्षण</label>
+        <input type="text" id="education" required>
+
+        <label class="required">उंची</label>
+        <input type="text" id="height" required>
+
+        <label>व्यवसाय</label>
+        <input type="text" id="occupation">
+
+        <label class="required">अपेक्षा</label>
+        <textarea id="expectations" required rows="3"></textarea>
+
+        <label class="required">वडीलांचे नाव</label>
+        <input type="text" id="father" required>
+
+        <label class="required">पत्ता</label>
+        <textarea id="address" required rows="2"></textarea>
+
+        <label>वडीलांचा व्यवसाय</label>
+        <input type="text" id="father_occupation">
+
+        <label>शेती</label>
+        <input type="text" id="farming">
+
+        <label>भाऊ</label>
+        <input type="text" id="brothers">
+
+        <label>बहिण</label>
+        <input type="text" id="sisters">
+
+        <label>मामाचे नाव</label>
+        <input type="text" id="mama">
+
+        <label>संपर्क व्यक्ती</label>
+        <input type="text" id="contact_person">
+
+        <label class="required">मोबाईल</label>
+        <input type="tel" id="contact" required pattern="[0-9]{10}">
 
         <div style="text-align:center; margin-top:25px;">
             <button type="button" class="final-btn" onclick="finalizeBiodata()">तयार करा</button>
@@ -140,11 +385,119 @@
     </div>
 </div>
 
-<div id="biodataPrint">...</div>
-<div id="biodataPrintModern">...</div>
+<div id="biodataPrint">
+    <div>
+        <div class="traditional-header">
+            <div class="logo-stamp">
+                <img src="/icons/apple-touch-icon.png" alt="लोगो">
+            </div>
+            <div>परिचय पत्र</div>
+        </div>
+
+        <table class="traditional-table">
+            <tr>
+                <td class="label">नाव</td>
+                <td>: <span id="print_name"></span></td>
+                <td class="photo-cell" rowspan="8">
+                    <div class="traditional-photo-box">
+                        <img id="print_photo" crossOrigin="anonymous">
+                    </div>
+                </td>
+            </tr>
+            <tr><td class="label">जन्म ता.</td><td>: <span id="print_dob"></span></td></tr>
+            <tr><td class="label">जन्म वेळ</td><td>: <span id="print_time"></span></td></tr>
+            <tr><td class="label">जन्म ठिकाण</td><td>: <span id="print_birthplace"></span></td></tr>
+            <tr><td class="label">वर्ण</td><td>: <span id="print_varna"></span></td></tr>
+            <tr><td class="label">शिक्षण</td><td>: <span id="print_education"></span></td></tr>
+            <tr><td class="label">उंची</td><td>: <span id="print_height"></span></td></tr>
+            <tr><td class="label">व्यवसाय</td><td>: <span id="print_occupation"></span></td></tr>
+        </table>
+
+        <div class="traditional-expectation">
+            <strong style="color:var(--red);">अपेक्षा:</strong> <span id="print_expectations"></span>
+        </div>
+
+        <div class="traditional-family-header">कुटुंबाची माहिती</div>
+        <table class="traditional-table">
+            <tr><td class="label">वडीलांचे नाव</td><td>: <span id="print_father"></span></td></tr>
+            <tr><td class="label">पत्ता</td><td>: <span id="print_address"></span></td></tr>
+            <tr><td class="label">वडीलांचा व्यवसाय</td><td>: <span id="print_father_occupation"></span></td></tr>
+            <tr><td class="label">शेती</td><td>: <span id="print_farming"></span></td></tr>
+            <tr><td class="label">भाऊ</td><td>: <span id="print_brothers"></span></td></tr>
+            <tr><td class="label">बहिण</td><td>: <span id="print_sisters"></span></td></tr>
+            <tr><td class="label">मामाचे नाव</td><td>: <span id="print_mama"></span></td></tr>
+        </table>
+
+        <div class="traditional-family-header">संपर्क</div>
+        <div class="traditional-contact">
+            <div id="print_contact_person"></div>
+            <div>मो. : <span id="print_contact"></span></div>
+        </div>
+    </div>
+</div>
+
+<div id="biodataPrintModern">
+    <div style="font-family: 'Open Sans', 'Noto Sans Devanagari', sans-serif;">
+
+        <div style="position:absolute; top:0; left:0; width:10px; height:100%; background:var(--modern-accent); opacity: 0.1;"></div>
+
+        <div style="text-align:right; margin-bottom:20px;">
+            <div class="modern-header-logo">
+                <img src="/icons/apple-touch-icon.png" alt="लोगो">
+            </div>
+            <div style="font-size:28px; font-weight:900; color:var(--modern-accent); font-family: 'Noto Sans Devanagari', sans-serif; float: right;">परिचय पत्र</div>
+            <div style="clear:both;"></div>
+            <div style="font-size:16px; color:var(--modern-accent); font-weight: bold; margin-top: 5px;">**बेलदार समाज - आधुनिक स्वरूप**</div>
+        </div>
+
+        <div class="modern-photo-info-container">
+            <div class="modern-photo-wrapper">
+                <div class="modern-photo-box">
+                    <img id="print_photo_modern">
+                </div>
+                <div style="font-size:18px; font-weight:700; margin-top:5px; color:var(--modern-accent); font-family: 'Noto Sans Devanagari', sans-serif;" id="print_name_modern"></div>
+            </div>
+
+            <div class="modern-info-wrapper">
+                <h3 class="modern-heading">👤 वैयक्तिक माहिती</h3>
+                <table style="width:100%; font-size:0.9em; line-height:1.8;">
+                    <tr><td style="width:35%; font-weight:bold;">जन्म ता. / वेळ</td><td>: <span id="print_dob_modern"></span> / <span id="print_time_modern"></span></td></tr>
+                    <tr><td style="font-weight:bold;">जन्म ठिकाण</td><td>: <span id="print_birthplace_modern"></span></td></tr>
+                    <tr><td style="font-weight:bold;">वर्ण / उंची</td><td>: <span id="print_varna_modern"></span> / <span id="print_height_modern"></span></td></tr>
+                    <tr><td style="font-weight:bold;">शिक्षण / व्यवसाय</td><td>: <span id="print_education_modern"></span> / <span id="print_occupation_modern"></span></td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="clear:both;"></div>
+
+        <h3 class="modern-heading" style="margin:20px 0 10px;">⭐ अपेक्षा</h3>
+        <div style="background:var(--modern-light-bg); padding:10px; border-left:3px solid var(--modern-accent); border-radius:4px; font-size:0.9em; line-height: 1.6;">
+             <span id="print_expectations_modern"></span>
+        </div>
+
+        <h3 class="modern-heading" style="margin:20px 0 10px;">👨‍👩‍👧‍👦 कौटुंबिक माहिती</h3>
+        <table style="width:100%; font-size:0.9em; line-height:1.8;">
+            <tr><td style="width:35%; font-weight:bold;">वडीलांचे नाव</td><td>: <span id="print_father_modern"></span></td></tr>
+            <tr><td style="font-weight:bold;">व्यवसाय / शेती</td><td>: <span id="print_father_occupation_modern"></span> / <span id="print_farming_modern"></span></td></tr>
+            <tr><td style="font-weight:bold;">भाऊ / बहिण</td><td>: <span id="print_brothers_modern"></span> / <span id="print_sisters_modern"></span></td></tr>
+            <tr><td style="font-weight:bold;">मामाचे नाव</td><td>: <span id="print_mama_modern"></span></td></tr>
+        </table>
+
+        <h3 class="modern-heading" style="margin:20px 0 10px;">📞 संपर्क</h3>
+        <div style="font-size:0.9em; line-height: 1.6;">
+            <p><span style="font-weight:bold; color:var(--modern-accent);">संपर्क व्यक्ती:</span> <span id="print_contact_person_modern"></span></p>
+            <p><span style="font-weight:bold; color:var(--modern-accent);">मोबाईल:</span> <span id="print_contact_modern"></span></p>
+            <p style="margin-top:5px;"><span style="font-weight:bold; color:var(--modern-accent);">पत्ता:</span> <span id="print_address_modern"></span></p>
+        </div>
+
+        <div style="border-top:1px dashed #ddd; padding-top:8px; text-align:center; font-size:0.8em; color:#777; margin-top:20px;">
+            **अधिक माहितीसाठी संपर्क साधा.**
+        </div>
+    </div>
+</div>
 
 <script>
-    // ... (All previous JavaScript functions: getFormData, updatePrintData, finalizeBiodata, captureAndDownload etc. remain the same) ...
     const el = {
         title: document.getElementById('title'),
         form: document.getElementById('biodataForm'),
@@ -158,22 +511,29 @@
         downloadOptions: document.getElementById('downloadOptions'),
         inputFormContainer: document.getElementById('inputFormContainer')
     };
+
     let photoURL = '';
-    let currentTemplateId = 'biodataPrint'; // Default template
+    let currentTemplateId = 'biodataPrint'; 
+
     function formatDateToDDMMYY(dateStr) {
         if (!dateStr) return '—';
         const [y, m, d] = dateStr.split('-');
         return `${d}/${m}/${y.slice(-2)}`;
     }
+
     el.preview.addEventListener('click', () => el.photo.click());
     el.photo.addEventListener('change', () => {
         const file = el.photo.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = e => { el.preview.innerHTML = `<img src="${e.target.result}" alt="फोटो">`; photoURL = e.target.result; };
+            reader.onload = e => {
+                el.preview.innerHTML = `<img src="${e.target.result}" alt="फोटो">`;
+                photoURL = e.target.result;
+            };
             reader.readAsDataURL(file);
         }
     });
+
     function getFormData() {
         const data = {};
         el.form.querySelectorAll('input, select, textarea').forEach(input => {
@@ -182,6 +542,7 @@
         data.title = el.title.value;
         return data;
     }
+
     function updatePrintData(templateId) {
         const d = getFormData();
         const suffix = templateId === 'biodataPrintModern' ? '_modern' : '';
@@ -217,6 +578,7 @@
         photoImg.src = photoURL || `data:image/svg+xml;utf8,${encodeURIComponent(placeholderSvg)}`;
     }
     
+    // Function to ensure only one template is active/marked for printing
     function setTemplateActive(templateId) {
         el.biodataPrint.classList.remove('active');
         el.biodataPrintModern.classList.remove('active');
@@ -238,10 +600,12 @@
         el.success.style.display = 'block';
         el.downloadOptions.style.display = 'none'; 
         
+        // Ensure no template is currently active
         setTemplateActive(null);
     }
 
     function showTemplate(template) {
+        // 1. Hide success message and show download buttons
         el.success.style.display = 'none';
         el.downloadOptions.style.display = 'block'; 
 
@@ -252,26 +616,40 @@
     }
     
     function printBiodata() {
+        // The print CSS media query ensures only the element with class 'active' is visible for printing
         window.print();
     }
 
     function captureAndDownload(type) {
         const element = document.getElementById(currentTemplateId).firstElementChild;
+        // Set crossOrigin attribute for CORS handling in canvas
         document.getElementById(currentTemplateId === 'biodataPrintModern' ? 'print_photo_modern' : 'print_photo').crossOrigin = 'anonymous';
         
         const backgroundColor = currentTemplateId === 'biodataPrintModern' ? 'white' : '#fdf6e3';
         const name = (el.title.value + (document.getElementById('name').value || 'परिचय-पत्र')).trim() + (currentTemplateId === 'biodataPrintModern' ? '-ModernBW' : '-Traditional-NoSVG');
 
+        // Capture logic
         const originalParent = element.parentElement;
-        const originalStyle = { position: originalParent.style.position, left: originalParent.style.left };
+        const originalStyle = {
+            position: originalParent.style.position,
+            left: originalParent.style.left
+        };
 
+        // Temporarily move to body and make visible
         originalParent.style.position = 'static';
         originalParent.style.left = 'auto';
         document.body.appendChild(originalParent);
 
-        html2canvas(element, { scale: 3, useCORS: true, allowTaint: true, backgroundColor: backgroundColor, logging: false }).then(canvas => {
+        html2canvas(element, {
+            scale: 3,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: backgroundColor,
+            logging: false
+        }).then(canvas => {
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
+            // Restore original position (move back off-screen)
             document.body.removeChild(originalParent);
             originalParent.style.position = originalStyle.position;
             originalParent.style.left = originalStyle.left;
@@ -311,13 +689,13 @@
 <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        // Registering the service worker with root scope './' for Netlify/GitHub compatibility
+        // Registering the service worker at the root scope
         navigator.serviceWorker.register('/service-worker.js', { scope: './' })
           .then(registration => {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
           })
           .catch(err => {
-            console.error('ServiceWorker registration failed:', err); // Check DevTools Console for this error
+            console.log('ServiceWorker registration failed: ', err);
           });
       });
     }
