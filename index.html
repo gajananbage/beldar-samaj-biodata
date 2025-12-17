@@ -6,7 +6,7 @@
     <title>बेलदार समाज - परिचय पत्र जनरेटर</title>
     <meta name="description" content="बेलदार समाज परिचय पत्र - भरणा व डाऊनलोड सुविधा.">
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#b8860b"> 
@@ -20,14 +20,11 @@
     <style>
         /* --- 1. GENERAL STYLES & VARIABLES --- */
         :root {
-            /* Traditional Colors */
             --gold: #b8860b;
             --gold-light: #d4af37;
             --red: #c0392b;
             --border: #8b5a2b;
             --text: #333;
-            
-            /* Modern B/W Colors */
             --modern-accent: #000000;
             --modern-light-bg: #f5f5f5;
         }
@@ -48,7 +45,7 @@
             margin-bottom: 8px;
         }
         .app-logo img {
-            width: 60px; /* Logo size for form */
+            width: 60px; 
             height: 60px;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -116,7 +113,7 @@
 
         #downloadOptions { display: none; }
 
-        /* --- 3. TEMPLATE 1: TRADITIONAL A4 Print Area (UPDATED TEXT SIZE) --- */
+        /* --- 3. TEMPLATE 1: TRADITIONAL A4 Print Area --- */
         #biodataPrint {
             position: absolute;
             left: -9999px;
@@ -126,7 +123,7 @@
             padding: 15mm;
             background: #fdf6e3;
             font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
-            font-size: 16px; /* मुख्य फॉन्ट आकार वाढवला */
+            font-size: 16px; 
             color: var(--text);
         }
         #biodataPrint > div {
@@ -149,11 +146,11 @@
             width:100%; height:100%; object-fit:contain; border-radius:6px;
         }
         .traditional-header div:last-child {
-            font-size:28px; /* परिचय पत्र हेडिंग आकार वाढवला */
+            font-size:28px; 
             font-weight:bold; color:var(--gold); border-bottom:3px double var(--gold); padding-bottom:8px; display:inline-block;
         }
         .traditional-table {
-            width:100%; margin-bottom:25px; line-height:1.8; /* लाईफ हाईट सुधारित */
+            width:100%; margin-bottom:25px; line-height:1.8; 
         }
         .traditional-table td {
             padding:8px 0; 
@@ -188,11 +185,11 @@
             background:#fdfaf5; padding:16px; border-left:5px solid var(--gold); border-radius:8px; margin:20px 0; font-size:16px; line-height:1.6;
         }
         .traditional-family-header {
-             text-align:center; font-size:22px; /* कुटुंब/संपर्क हेडिंग आकार वाढवला */
+             text-align:center; font-size:22px; 
              color:var(--gold); margin:20px 0 10px; font-weight:bold; border-top:2px dashed var(--gold); padding-top:10px;
         }
         .traditional-contact {
-            text-align:center; font-size:20px; /* संपर्क मजकूर आकार वाढवला */
+            text-align:center; font-size:20px; 
             color:var(--text);
         }
 
@@ -265,9 +262,9 @@
             width:100%; height:100%; object-fit:cover;
         }
 
-        /* Modern template text size fix (0.9em to 1em) */
+        /* Modern template text size fix */
         .modern-info-wrapper table, .modern-info-wrapper p, .modern-info-wrapper div {
-            font-size: 1em !important; /* Fixed font size for clarity */
+            font-size: 1em !important; 
         }
         .modern-info-wrapper table {
             line-height: 1.7;
@@ -278,7 +275,6 @@
         @media print {
             body * { visibility: hidden; }
             
-            /* Show only the active template for printing */
             #biodataPrint.active, #biodataPrint.active * { visibility: visible; }
             #biodataPrint.active { position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
             
@@ -293,8 +289,9 @@
 
 <div class="form-container" id="inputFormContainer">
     <div class="app-logo">
-        <img src="/icons/apple-touch-icon.png" alt="बेलदार समाज लोगो">
+        <img src="./icons/apple-touch-icon.png" alt="बेलदार समाज लोगो">
     </div>
+
     <div class="society-heading">बेलदार समाज</div>
     <h2>परिचय पत्र भरा</h2>
 
@@ -396,7 +393,7 @@
     <div>
         <div class="traditional-header">
             <div class="logo-stamp">
-                <img src="/icons/apple-touch-icon.png" alt="लोगो">
+                <img src="./icons/apple-touch-icon.png" alt="लोगो">
             </div>
             <div>परिचय पत्र</div>
         </div>
@@ -450,7 +447,7 @@
 
         <div style="text-align:right; margin-bottom:20px;">
             <div class="modern-header-logo">
-                <img src="/icons/apple-touch-icon.png" alt="लोगो">
+                <img src="./icons/apple-touch-icon.png" alt="लोगो">
             </div>
             <div style="font-size:28px; font-weight:900; color:var(--modern-accent); font-family: 'Noto Sans Devanagari', sans-serif; float: right;">परिचय पत्र</div>
             <div style="clear:both;"></div>
@@ -558,7 +555,6 @@
             new Date('1970-01-01T' + d.time).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', hour12: true}) 
             : '—';
         
-        // FIX 5: Handle empty contact person
         const contactPersonDisplay = d.contact_person || 'स्वतः';
 
         document.getElementById(`print_name${suffix}`).textContent = fullName || '—';
@@ -567,7 +563,7 @@
         document.getElementById(`print_birthplace${suffix}`).textContent = d.birthplace || '—';
         document.getElementById(`print_varna${suffix}`).textContent = d.varna || '—';
         document.getElementById(`print_education${suffix}`).textContent = d.education || '—';
-        document.getElementById(`print_height${suffix}`).textContent = d.height || '—'; // FIX 2: Height unit is assumed to be included by user
+        document.getElementById(`print_height${suffix}`).textContent = d.height || '—'; 
         document.getElementById(`print_occupation${suffix}`).textContent = d.occupation || '—';
         document.getElementById(`print_expectations${suffix}`).textContent = d.expectations || '—';
         document.getElementById(`print_father${suffix}`).textContent = d.father || '—';
@@ -599,7 +595,6 @@
     }
 
     function finalizeBiodata() {
-        // BUG FIX 1: Ensure form validation passes first
         if (!el.title.value) {
              alert("कृपया 'ची. / कु.' निवडा");
              return;
@@ -709,8 +704,8 @@
 <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        // Registering the service worker at the root scope
-        navigator.serviceWorker.register('/service-worker.js', { scope: './' })
+        // Path Fixed: './service-worker.js'
+        navigator.serviceWorker.register('./service-worker.js', { scope: './' })
           .then(registration => {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
           })
