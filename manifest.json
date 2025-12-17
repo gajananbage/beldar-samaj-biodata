@@ -1,28 +1,20 @@
 {
-    "name": "बेलदार समाज परिचय पत्र",
-    "short_name": "परिचय पत्र",
-    "description": "बेलदार समाज परिचय पत्र भरण्यासाठी आणि डाउनलोड करण्यासाठी ॲप्लिकेशन.",
-    "start_url": "./",
-    "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#fdf6e3",
-    "theme_color": "#b8860b",
-    "icons": [
-        {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "/icons/apple-touch-icon.png",
-            "sizes": "180x180",
-            "type": "image/png"
-        }
-    ]
+  "name": "बेलदार समाज परिचय पत्र",
+  "short_name": "Biodata",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fdf6e3",
+  "theme_color": "#b8860b",
+  "icons": [
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
