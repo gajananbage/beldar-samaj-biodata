@@ -11,7 +11,8 @@
 - **नो इन्स्टॉलेशन** - डायरेक्ट ब्राउजर
 
 ## कसे वापरावे? 📝
-1. https://beldar-samaj-biodata.netlify.app/ वर जा.
+1. https://gajananbage.github.io/beldar-samaj-biodata/
+ वर जा.
 2. फॉर्म भरा (नाव, फोटो, अपेक्षा इ.).
 3. **तयार करा** बटन दाबा.
 4. **PDF/JPEG** डाउनलोड किंवा **प्रिंट** करा.
