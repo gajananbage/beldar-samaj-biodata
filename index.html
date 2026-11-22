@@ -1,719 +1,143 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="mr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>बेलदार समाज - परिचय पत्र जनरेटर</title>
-    <meta name="description" content="बेलदार समाज परिचय पत्र - भरणा व डाऊनलोड सुविधा.">
-
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="theme-color" content="#b8860b"> 
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;700&family=Dancing+Script:wght@700&family=Open+Sans:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* --- 1. GENERAL STYLES & VARIABLES --- */
-        :root {
-            --gold: #b8860b;
-            --gold-light: #d4af37;
-            --red: #c0392b;
-            --border: #8b5a2b;
-            --text: #333;
-            --modern-accent: #000000;
-            --modern-light-bg: #f5f5f5;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
-            background: linear-gradient(135deg, #fdf6e3 0%, #f5e6cc 100%);
-            padding: 15px;
-            min-height: 10vh;
-            overflow-x: hidden;
-        }
-
-        /* --- LOGO STYLES (NEW) --- */
-        .app-logo {
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .app-logo img {
-            width: 60px; 
-            height: 60px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        /* --- 2. FORM STYLES --- */
-        .form-container {
-            max-width: 520px;
-            margin: 20px auto;
-            background: white;
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(184, 134, 11, 0.2);
-            border: 3px solid var(--gold-light);
-        }
-
-        .society-heading {
-            text-align: center;
-            font-size: 2.1em;
-            font-weight: 900;
-            margin: 12px 0 18px;
-            background: linear-gradient(45deg, var(--gold), var(--gold-light), var(--red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(184, 134, 11, 0.2);
-        }
-
-        h2 { text-align: center; color: var(--red); margin: 20px 0; font-size: 1.6em; }
-
-        label { display: flex; align-items: center; margin: 15px 0 6px; font-weight: bold; color: var(--red); font-size: 0.95em; }
-        label i { margin-right: 6px; color: var(--gold); width: 18px; text-align: center; }
-
-        input, select, textarea {
-            width: 100%; padding: 12px 14px; border: 2px solid #ffe4b3; border-radius: 12px;
-            font-family: inherit; font-size: 0.95em; background: #fffdf0;
-        }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); }
-
-        .required::after { content: " *"; color: #e74c3c; }
-        .row { display: flex; gap: 12px; margin-bottom: 5px; }
-        .row > div { flex: 1; }
-
-        .photo-preview {
-            width: 120px; height: 160px; margin: 15px auto; border: 5px solid var(--gold);
-            border-radius: 15px; overflow: hidden; background: #fdfaf5;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 48px; color: var(--gold); cursor: pointer;
-        }
-        .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
-
-        .final-btn, .action-btn {
-            display: inline-block; padding: 12px 28px; border: none; border-radius: 30px;
-            font-weight: bold; font-size: 1.1em; cursor: pointer; margin: 10px 6px;
-        }
-        .final-btn { background: var(--gold-light); color: white; }
-        .final-btn:hover { background: var(--gold); }
-        .action-btn { background: #48bb78; color: white; }
-        .action-btn:hover { background: #38a169; }
-        .reset-btn { background: #e74c3c !important; }
-        .pdf-btn { background: #c0392b !important; }
-        .modern-btn { background: var(--modern-accent) !important; }
-
-        .success { display: none; text-align: center; padding: 20px; background: #d4edda; color: #155724; border-radius: 16px; margin-top: 20px; border: 2px solid #c3e6cb; }
-
-        #downloadOptions { display: none; }
-
-        /* --- 3. TEMPLATE 1: TRADITIONAL A4 Print Area --- */
-        #biodataPrint {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 15mm;
-            background: #fdf6e3;
-            font-family: 'Noto Serif Devanagari', 'Devanagari', Georgia, serif;
-            font-size: 16px; 
-            color: var(--text);
-        }
-        #biodataPrint > div {
-            width: 100%;
-            min-height: 297mm;
-            padding: 20mm;
-            border: 8px double var(--gold);
-            background: white;
-            box-sizing: border-box;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        .traditional-header {
-             text-align:center; margin-bottom:30px; margin-top:60px;
-        }
-        .traditional-header .logo-stamp {
-            position:absolute; top:20px; left:20px; width:45px; height:45px; border:2px solid var(--gold); background:white; z-index:10; border-radius:8px;
-        }
-        .traditional-header .logo-stamp img {
-            width:100%; height:100%; object-fit:contain; border-radius:6px;
-        }
-        .traditional-header div:last-child {
-            font-size:28px; 
-            font-weight:bold; color:var(--gold); border-bottom:3px double var(--gold); padding-bottom:8px; display:inline-block;
-        }
-        .traditional-table {
-            width:100%; margin-bottom:25px; line-height:1.8; 
-        }
-        .traditional-table td {
-            padding:8px 0; 
-            vertical-align:top;
-        }
-        .traditional-table .photo-cell {
-            width:30%; 
-            text-align:center; 
-            vertical-align:top;
-        }
-        .traditional-table .label {
-            width:30%; 
-            font-weight:bold; 
-            color:var(--border);
-        }
-        
-        /* PROFILE PICTURE SIZE (Traditional - 200px x 263px) */
-        .traditional-photo-box {
-            width:200px; 
-            height:263px; 
-            border:5px solid var(--gold); 
-            border-radius:12px; 
-            overflow:hidden; 
-            margin:0 auto; 
-            background:#fdfaf5;
-        }
-        .traditional-photo-box img {
-            width:100%; height:100%; object-fit:cover;
-        }
-        
-        .traditional-expectation {
-            background:#fdfaf5; padding:16px; border-left:5px solid var(--gold); border-radius:8px; margin:20px 0; font-size:16px; line-height:1.6;
-        }
-        .traditional-family-header {
-             text-align:center; font-size:22px; 
-             color:var(--gold); margin:20px 0 10px; font-weight:bold; border-top:2px dashed var(--gold); padding-top:10px;
-        }
-        .traditional-contact {
-            text-align:center; font-size:20px; 
-            color:var(--text);
-        }
-
-        /* --- 4. TEMPLATE 2: MODERN B/W A4 Print Area --- */
-        #biodataPrintModern {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 8mm; 
-            font-family: 'Open Sans', 'Noto Sans Devanagari', sans-serif; 
-            font-size: 16px; 
-            color: var(--modern-accent); 
-        }
-        #biodataPrintModern > div {
-            width: 100%;
-            min-height: 297mm;
-            padding: 15mm;
-            background: white;
-            box-sizing: border-box;
-            position: relative;
-            border: 4px solid var(--modern-accent); 
-            border-style: solid double;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        }
-        .modern-heading {
-            color:var(--modern-accent); border-bottom:2px solid #ddd; padding-bottom:8px; margin-bottom:15px; font-size:1.4em; font-family: 'Noto Sans Devanagari', sans-serif;
-        }
-        .modern-header-logo {
-            float: right; 
-            width: 50px; 
-            height: 50px; 
-            margin-left: 15px; 
-            border-radius: 8px;
-        }
-        .modern-header-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-        
-        .modern-photo-info-container {
-            display: flex;
-            align-items: flex-start; 
-            margin-bottom: 20px;
-            gap: 20px; 
-        }
-        
-        .modern-photo-wrapper {
-            flex-shrink: 0; 
-            text-align: center;
-        }
-        
-        .modern-info-wrapper {
-            flex-grow: 1; 
-        }
-        
-        /* PROFILE PICTURE SIZE (Modern - 200x263) */
-        .modern-photo-box {
-            width: 200px; 
-            height: 263px; 
-            border:2px solid var(--modern-accent); 
-            border-radius:8px; 
-            overflow:hidden; 
-            background:#f5f5f5;
-        }
-        .modern-photo-box img {
-            width:100%; height:100%; object-fit:cover;
-        }
-
-        /* Modern template text size fix */
-        .modern-info-wrapper table, .modern-info-wrapper p, .modern-info-wrapper div {
-            font-size: 1em !important; 
-        }
-        .modern-info-wrapper table {
-            line-height: 1.7;
-        }
-
-
-        /* --- Print Media Query --- */
-        @media print {
-            body * { visibility: hidden; }
-            
-            #biodataPrint.active, #biodataPrint.active * { visibility: visible; }
-            #biodataPrint.active { position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
-            
-            #biodataPrintModern.active, #biodataPrintModern.active * { visibility: visible; }
-            #biodataPrintModern.active { position: absolute; left: 0; top: 0; width: 210mm; background: white !important; }
-            
-            .form-container, .success, #downloadOptions { display: none !important; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#9b6b18">
+<title>बेलदार समाज | परिचय पत्र</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--gold:#a87516;--gold2:#d6ad55;--ink:#302719;--muted:#756b5c;--cream:#fffaf0;--line:#eadfc9;--red:#9f332d;--green:#28734d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#fff7df 0,#f6edda 45%,#eee3ce 100%);color:var(--ink);font-family:"Noto Sans Devanagari",sans-serif;padding:22px 14px 50px}
+.shell{max-width:920px;margin:auto}.top{text-align:center;margin:4px auto 22px}.logo{width:68px;height:68px;margin:auto auto 10px;border-radius:20px;background:linear-gradient(145deg,#f8e7b5,#fff);border:2px solid var(--gold2);display:grid;place-items:center;color:var(--gold);font-size:30px;box-shadow:0 8px 22px #9b6b1822}.top h1{font:800 clamp(27px,5vw,38px) "Noto Serif Devanagari",serif;margin:0;color:#80560f}.top p{color:var(--muted);margin:7px 0 0}
+.panel{max-width:720px;margin:auto;background:#fff;border:1px solid #ead9b5;border-radius:24px;box-shadow:0 18px 55px #67440f18;overflow:hidden}.panel-head{padding:22px 26px;background:linear-gradient(120deg,#fff8e7,#fff);border-bottom:1px solid var(--line)}.panel-head h2{margin:0;font-size:21px;color:var(--red)}.panel-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
+form{padding:22px 26px 28px}.section-title{display:flex;align-items:center;gap:10px;margin:18px 0 12px;color:#8b6017;font-weight:800}.section-title:first-child{margin-top:0}.section-title:after{content:"";height:1px;background:var(--line);flex:1}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.field{min-width:0;margin-bottom:13px}.field.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin:0 0 6px;color:#514332}.req:after{content:" *";color:#c0392b}
+input,select,textarea{width:100%;padding:12px 13px;border:1.5px solid #e8dcc5;border-radius:12px;background:#fffdf8;color:var(--ink);font:inherit;font-size:14px;outline:none;transition:.18s}input:focus,select:focus,textarea:focus{border-color:var(--gold2);box-shadow:0 0 0 3px #d6ad552b}textarea{resize:vertical;min-height:76px}.hint{font-size:11px;color:#8b8172;margin-top:5px}
+.photo-area{display:flex;align-items:center;gap:16px;padding:14px;background:#fffaf0;border:1px dashed #d6bd8d;border-radius:16px}.photo-preview{width:88px;height:112px;flex:none;border:2px solid var(--gold2);border-radius:11px;overflow:hidden;background:#f7edda;display:grid;place-items:center;color:#a87516;font-size:27px}.photo-preview img{width:100%;height:100%;object-fit:cover}.photo-area .grow{flex:1}.photo-area label{margin-bottom:8px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}.btn{border:0;border-radius:999px;padding:12px 22px;font:700 14px "Noto Sans Devanagari",sans-serif;cursor:pointer;transition:transform .15s,filter .15s}.btn:hover{filter:brightness(.96);transform:translateY(-1px)}.primary{background:linear-gradient(110deg,#9c6812,#d2a94f);color:white;box-shadow:0 7px 16px #a875162b}.light{background:#f2eee6;color:#544735}.danger{background:#a83b32;color:white}.green{background:#28734d;color:white}.dark{background:#272727;color:white}
+.notice{display:none;margin:18px 26px 0;padding:15px;border-radius:14px;background:#edf8f0;border:1px solid #b9dfc5;color:#205b38;text-align:center}.notice strong{display:block;margin-bottom:8px}.template-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.downloads{display:none;padding:0 20px 22px;text-align:center}.downloads p{font-size:13px;color:var(--muted);margin:12px 0 4px}
+#output{width:794px;min-height:1123px;padding:52px;background:#fff;position:fixed;left:-12000px;top:0;color:#302719;font-family:"Noto Serif Devanagari",serif}
+.paper{min-height:1019px;border:7px double #b8860b;padding:40px 42px;position:relative;background:linear-gradient(145deg,#fffefa,#fff)}
+.paper.modern{border:3px solid #292929;border-left:13px solid #292929;font-family:"Noto Sans Devanagari",sans-serif}
+.paper-head{text-align:center;margin:8px 0 28px}.paper-head .small{font-size:14px;color:#92702d;letter-spacing:1px}.paper-head h2{display:inline-block;font-size:30px;color:#a87516;border-bottom:3px double #c49a42;padding:0 22px 9px;margin:7px 0 0}.modern .paper-head h2{color:#222;border-color:#555}
+.paper-grid{display:grid;grid-template-columns:1fr 185px;gap:24px;align-items:start}.photo-frame{width:180px;height:235px;border:4px solid #c49a42;border-radius:10px;overflow:hidden;background:#f6f2e9}.modern .photo-frame{border:2px solid #333;border-radius:4px}.photo-frame img{width:100%;height:100%;object-fit:cover}.person-name{font-size:22px;font-weight:800;text-align:center;margin-top:8px}
+.info-table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.65}.info-table td{padding:6px 4px;vertical-align:top;border-bottom:1px solid #eee7d9}.info-table td:first-child{width:38%;font-weight:700;color:#77531a}.modern .info-table td:first-child{color:#333}.block-title{font-size:19px;color:#a87516;border-bottom:1px solid #d8c18f;padding:8px 0;margin:26px 0 10px}.modern .block-title{color:#222;border-color:#bbb}.expect{background:#fff9e9;border-left:5px solid #c49a42;padding:13px 15px;line-height:1.7;white-space:pre-wrap}.modern .expect{background:#f4f4f4;border-color:#333}.contact{text-align:center;font-size:17px;line-height:1.8;margin-top:8px}.paper-foot{text-align:center;color:#8b8172;font-size:11px;margin-top:32px;border-top:1px dashed #d6c9ae;padding-top:12px}
+@media(max-width:600px){body{padding:12px 9px 30px}.panel{border-radius:18px}.panel-head{padding:18px}.panel-head h2{font-size:19px}form{padding:18px 16px 22px}.grid{grid-template-columns:1fr;gap:0}.field.full{grid-column:auto}.photo-area{align-items:flex-start}.btn{padding:11px 16px}.actions .btn{flex:1 1 130px}}
+@media print{body{padding:0;background:white}body>*{display:none!important}#output{display:block!important;position:static!important;left:auto!important;top:auto!important;width:210mm;min-height:297mm;padding:10mm;margin:0}.paper{min-height:277mm;break-inside:avoid}}
+</style>
 </head>
 <body>
-
-<div class="form-container" id="inputFormContainer">
-    <div class="app-logo">
-        <img src="./icons/apple-touch-icon.png" alt="बेलदार समाज लोगो">
-    </div>
-
-    <div class="society-heading">बेलदार समाज</div>
-    <h2>परिचय पत्र भरा</h2>
-
-    <label for="title" class="required">ची. / कु.</label>
-    <select id="title" required>
-        <option value="">निवडा</option>
-        <option value="ची.">ची. (वर)</option>
-        <option value="कु.">कु. (वधू)</option>
-    </select>
-
-    <div style="text-align:center; margin:20px 0;">
-        <label for="photo" class="required" style="display:block;">पासपोर्ट साइज फोटो</label>
-        <input type="file" id="photo" accept="image/*" required style="display:none;">
-        <div class="photo-preview" id="preview">
-            <i class="fas fa-camera"></i>
-        </div>
-    </div>
-
-    <form id="biodataForm" novalidate>
-        <label class="required">नाव</label>
-        <input type="text" id="name" required>
-
-        <div class="row">
-            <div><label class="required">जन्म तारीख</label><input type="date" id="dob" required></div>
-            <div><label>जन्म वेळ</label><input type="time" id="time"></div>
-        </div>
-
-        <label>जन्म ठिकाण</label>
-        <input type="text" id="birthplace">
-
-        <label class="required">वर्ण</label>
-        <select id="varna" required>
-            <option value="">निवडा</option>
-            <option>गौर</option>
-            <option>सावळा</option>
-            <option>मध्यम</option>
-        </select>
-
-        <label class="required">शिक्षण</label>
-        <input type="text" id="education" required>
-
-        <label class="required">उंची</label>
-        <input type="text" id="height" required placeholder="उदा. 5 फूट 8 इंच किंवा 172cm">
-
-        <label>व्यवसाय</label>
-        <input type="text" id="occupation">
-
-        <label class="required">अपेक्षा</label>
-        <textarea id="expectations" required rows="3"></textarea>
-
-        <label class="required">वडीलांचे नाव</label>
-        <input type="text" id="father" required>
-
-        <label class="required">पत्ता</label>
-        <textarea id="address" required rows="2"></textarea>
-
-        <label>वडीलांचा व्यवसाय</label>
-        <input type="text" id="father_occupation">
-
-        <label>शेती</label>
-        <input type="text" id="farming">
-
-        <label>भाऊ</label>
-        <input type="text" id="brothers">
-
-        <label>बहिण</label>
-        <input type="text" id="sisters">
-
-        <label>मामाचे नाव</label>
-        <input type="text" id="mama">
-
-        <label>संपर्क व्यक्ती</label>
-        <input type="text" id="contact_person" placeholder="संपर्कासाठी व्यक्तीचे नाव (रिकामे असल्यास, अर्जदार स्वतः)">
-
-        <label class="required">मोबाईल</label>
-        <input type="tel" id="contact" required pattern="[0-9]{10}">
-
-        <div style="text-align:center; margin-top:25px;">
-            <button type="button" class="final-btn" onclick="finalizeBiodata()">तयार करा</button>
-            <button type="button" class="action-btn reset-btn" onclick="resetForm()">रिसेट</button>
-        </div>
-    </form>
-
-    <div class="success" id="successMsg">
-        <strong>परिचय पत्र तयार!</strong><br><br>
-        <div style="margin-bottom: 15px; font-weight: bold;">टेम्पलेट निवडा:</div>
-        <button type="button" class="action-btn" onclick="showTemplate('traditional')">पारंपरिक</button>
-        <button type="button" class="action-btn modern-btn" onclick="showTemplate('modern')">आधुनिक</button>
-    </div>
-    
-    <div id="downloadOptions" style="text-align:center; margin-top:15px;">
-        <button type="button" class="action-btn" onclick="printBiodata()">प्रिंट</button>
-        <button type="button" class="action-btn" id="saveJpeg">JPEG</button>
-        <button type="button" class="action-btn pdf-btn" id="savePdf">PDF</button>
-    </div>
+<div class="shell">
+<header class="top">
+ <div class="logo">✦</div>
+ <h1>बेलदार समाज</h1>
+ <p>सुंदर, सुबक आणि आकर्षक विवाह परिचय पत्र</p>
+</header>
+<main class="panel">
+ <div class="panel-head"><h2>परिचय पत्र तयार करा</h2><p>खालील माहिती भरा. (*) असलेली माहिती आवश्यक आहे.</p></div>
+ <form id="bioForm">
+  <div class="section-title">वैयक्तिक माहिती</div>
+  <div class="grid">
+   <div class="field"><label class="req" for="title">ची. / कु.</label><select id="title" required><option value="">निवडा</option><option value="ची.">ची. (वर)</option><option value="कु.">कु. (वधू)</option></select></div>
+   <div class="field"><label class="req" for="name">पूर्ण नाव</label><input id="name" required maxlength="100" placeholder="पूर्ण नाव लिहा"></div>
+   <div class="field full"><div class="photo-area"><div class="photo-preview" id="photoPreview">📷</div><div class="grow"><label class="req" for="photo">पासपोर्ट साइज फोटो</label><input id="photo" type="file" accept="image/*" required><div class="hint">JPG किंवा PNG फोटो निवडा. फोटो फक्त याच उपकरणावर वापरला जाईल.</div></div></div></div>
+   <div class="field"><label class="req" for="dob">जन्म तारीख</label><input id="dob" type="date" required></div>
+   <div class="field"><label for="time">जन्म वेळ</label><input id="time" type="time"></div>
+   <div class="field"><label for="birthplace">जन्म ठिकाण</label><input id="birthplace" placeholder="गाव / शहर"></div>
+   <div class="field"><label class="req" for="varna">वर्ण</label><select id="varna" required><option value="">निवडा</option><option>गौर</option><option>सावळा</option><option>मध्यम</option></select></div>
+   <div class="field"><label class="req" for="education">शिक्षण</label><input id="education" required placeholder="उदा. B.A., M.A."></div>
+   <div class="field"><label class="req" for="height">उंची</label><input id="height" required placeholder="उदा. 5 फूट 8 इंच"></div>
+   <div class="field full"><label for="occupation">व्यवसाय</label><input id="occupation" placeholder="व्यवसाय / नोकरी"></div>
+   <div class="field full"><label class="req" for="expectations">अपेक्षा</label><textarea id="expectations" required placeholder="अपेक्षित जोडीदाराबद्दल माहिती"></textarea></div>
+  </div>
+  <div class="section-title">कुटुंबाची माहिती</div>
+  <div class="grid">
+   <div class="field"><label class="req" for="father">वडिलांचे नाव</label><input id="father" required></div>
+   <div class="field"><label for="father_occupation">वडिलांचा व्यवसाय</label><input id="father_occupation"></div>
+   <div class="field full"><label class="req" for="address">संपूर्ण पत्ता</label><textarea id="address" required placeholder="घर क्रमांक, गाव, तालुका, जिल्हा"></textarea></div>
+   <div class="field"><label for="farming">शेती</label><input id="farming" placeholder="उदा. 3 एकर"></div>
+   <div class="field"><label for="brothers">भाऊ</label><input id="brothers" placeholder="उदा. 1 (विवाहित)"></div>
+   <div class="field"><label for="sisters">बहिणी</label><input id="sisters" placeholder="उदा. 1 (अविवाहित)"></div>
+   <div class="field"><label for="mama">मामाचे नाव</label><input id="mama"></div>
+  </div>
+  <div class="section-title">संपर्क माहिती</div>
+  <div class="grid">
+   <div class="field"><label for="contact_person">संपर्क व्यक्ती</label><input id="contact_person" placeholder="रिकामे ठेवल्यास अर्जदार स्वतः"></div>
+   <div class="field"><label class="req" for="contact">मोबाईल क्रमांक</label><input id="contact" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required placeholder="10 अंकी मोबाईल क्रमांक"></div>
+  </div>
+  <div class="actions"><button class="btn primary" type="submit">✦ परिचय पत्र तयार करा</button><button class="btn light" type="reset" id="resetBtn">माहिती रिसेट करा</button></div>
+ </form>
+ <div class="notice" id="success"><strong>✓ परिचय पत्र तयार झाले!</strong><div class="template-actions"><button class="btn primary" type="button" data-template="traditional">पारंपरिक डिझाइन</button><button class="btn dark" type="button" data-template="modern">आधुनिक डिझाइन</button></div></div>
+ <div class="downloads" id="downloads"><p>डिझाइन निवडले आहे. आता डाउनलोड करा किंवा प्रिंट काढा.</p><div class="template-actions"><button class="btn green" id="jpegBtn" type="button">JPEG डाउनलोड</button><button class="btn danger" id="pdfBtn" type="button">PDF डाउनलोड</button><button class="btn light" id="printBtn" type="button">प्रिंट</button><button class="btn light" id="editBtn" type="button">माहिती बदला</button></div></div>
+</main>
 </div>
-
-<div id="biodataPrint">
-    <div>
-        <div class="traditional-header">
-            <div class="logo-stamp">
-                <img src="./icons/apple-touch-icon.png" alt="लोगो">
-            </div>
-            <div>परिचय पत्र</div>
-        </div>
-
-        <table class="traditional-table">
-            <tr>
-                <td class="label">नाव</td>
-                <td>: <span id="print_name"></span></td>
-                <td class="photo-cell" rowspan="8">
-                    <div class="traditional-photo-box">
-                        <img id="print_photo" crossOrigin="anonymous">
-                    </div>
-                </td>
-            </tr>
-            <tr><td class="label">जन्म ता.</td><td>: <span id="print_dob"></span></td></tr>
-            <tr><td class="label">जन्म वेळ</td><td>: <span id="print_time"></span></td></tr>
-            <tr><td class="label">जन्म ठिकाण</td><td>: <span id="print_birthplace"></span></td></tr>
-            <tr><td class="label">वर्ण</td><td>: <span id="print_varna"></span></td></tr>
-            <tr><td class="label">शिक्षण</td><td>: <span id="print_education"></span></td></tr>
-            <tr><td class="label">उंची</td><td>: <span id="print_height"></span></td></tr>
-            <tr><td class="label">व्यवसाय</td><td>: <span id="print_occupation"></span></td></tr>
-        </table>
-
-        <div class="traditional-expectation">
-            <strong style="color:var(--red);">अपेक्षा:</strong> <span id="print_expectations"></span>
-        </div>
-
-        <div class="traditional-family-header">कुटुंबाची माहिती</div>
-        <table class="traditional-table">
-            <tr><td class="label">वडीलांचे नाव</td><td>: <span id="print_father"></span></td></tr>
-            <tr><td class="label">पत्ता</td><td>: <span id="print_address"></span></td></tr>
-            <tr><td class="label">वडीलांचा व्यवसाय</td><td>: <span id="print_father_occupation"></span></td></tr>
-            <tr><td class="label">शेती</td><td>: <span id="print_farming"></span></td></tr>
-            <tr><td class="label">भाऊ</td><td>: <span id="print_brothers"></span></td></tr>
-            <tr><td class="label">बहिण</td><td>: <span id="print_sisters"></span></td></tr>
-            <tr><td class="label">मामाचे नाव</td><td>: <span id="print_mama"></span></td></tr>
-        </table>
-
-        <div class="traditional-family-header">संपर्क</div>
-        <div class="traditional-contact">
-            <div><strong style="color:var(--red);">संपर्क व्यक्ती:</strong> <span id="print_contact_person"></span></div>
-            <div>मो. : <span id="print_contact"></span></div>
-        </div>
-    </div>
-</div>
-
-<div id="biodataPrintModern">
-    <div style="font-family: 'Open Sans', 'Noto Sans Devanagari', sans-serif;">
-
-        <div style="position:absolute; top:0; left:0; width:10px; height:100%; background:var(--modern-accent); opacity: 0.1;"></div>
-
-        <div style="text-align:right; margin-bottom:20px;">
-            <div class="modern-header-logo">
-                <img src="./icons/apple-touch-icon.png" alt="लोगो">
-            </div>
-            <div style="font-size:28px; font-weight:900; color:var(--modern-accent); font-family: 'Noto Sans Devanagari', sans-serif; float: right;">परिचय पत्र</div>
-            <div style="clear:both;"></div>
-            <div style="font-size:16px; color:var(--modern-accent); font-weight: bold; margin-top: 5px;">**बेलदार समाज - आधुनिक स्वरूप**</div>
-        </div>
-
-        <div class="modern-photo-info-container">
-            <div class="modern-photo-wrapper">
-                <div class="modern-photo-box">
-                    <img id="print_photo_modern">
-                </div>
-                <div style="font-size:18px; font-weight:700; margin-top:5px; color:var(--modern-accent); font-family: 'Noto Sans Devanagari', sans-serif;" id="print_name_modern"></div>
-            </div>
-
-            <div class="modern-info-wrapper">
-                <h3 class="modern-heading">👤 वैयक्तिक माहिती</h3>
-                <table style="width:100%; line-height:1.7;">
-                    <tr><td style="width:35%; font-weight:bold;">जन्म ता. / वेळ</td><td>: <span id="print_dob_modern"></span> / <span id="print_time_modern"></span></td></tr>
-                    <tr><td style="font-weight:bold;">जन्म ठिकाण</td><td>: <span id="print_birthplace_modern"></span></td></tr>
-                    <tr><td style="font-weight:bold;">वर्ण / उंची</td><td>: <span id="print_varna_modern"></span> / <span id="print_height_modern"></span></td></tr>
-                    <tr><td style="font-weight:bold;">शिक्षण / व्यवसाय</td><td>: <span id="print_education_modern"></span> / <span id="print_occupation_modern"></span></td></tr>
-                </table>
-            </div>
-        </div>
-
-        <div style="clear:both;"></div>
-
-        <h3 class="modern-heading" style="margin:20px 0 10px;">⭐ अपेक्षा</h3>
-        <div style="background:var(--modern-light-bg); padding:10px; border-left:3px solid var(--modern-accent); border-radius:4px; font-size:1em; line-height: 1.6;">
-             <span id="print_expectations_modern"></span>
-        </div>
-
-        <h3 class="modern-heading" style="margin:20px 0 10px;">👨‍👩‍👧‍👦 कौटुंबिक माहिती</h3>
-        <table style="width:100%; line-height:1.7;">
-            <tr><td style="width:35%; font-weight:bold;">वडीलांचे नाव</td><td>: <span id="print_father_modern"></span></td></tr>
-            <tr><td style="font-weight:bold;">व्यवसाय / शेती</td><td>: <span id="print_father_occupation_modern"></span> / <span id="print_farming_modern"></span></td></tr>
-            <tr><td style="font-weight:bold;">भाऊ / बहिण</td><td>: <span id="print_brothers_modern"></span> / <span id="print_sisters_modern"></span></td></tr>
-            <tr><td style="font-weight:bold;">मामाचे नाव</td><td>: <span id="print_mama_modern"></span></td></tr>
-        </table>
-
-        <h3 class="modern-heading" style="margin:20px 0 10px;">📞 संपर्क</h3>
-        <div style="line-height: 1.6;">
-            <p><span style="font-weight:bold; color:var(--modern-accent);">संपर्क व्यक्ती:</span> <span id="print_contact_person_modern"></span></p>
-            <p><span style="font-weight:bold; color:var(--modern-accent);">मोबाईल:</span> <span id="print_contact_modern"></span></p>
-            <p style="margin-top:5px;"><span style="font-weight:bold; color:var(--modern-accent);">पत्ता:</span> <span id="print_address_modern"></span></p>
-        </div>
-
-        <div style="border-top:1px dashed #ddd; padding-top:8px; text-align:center; font-size:0.8em; color:#777; margin-top:20px;">
-            **अधिक माहितीसाठी संपर्क साधा.**
-        </div>
-    </div>
-</div>
-
+<section id="output" aria-hidden="true"><div class="paper" id="paper">
+ <div class="paper-head"><div class="small">॥ श्री गणेशाय नमः ॥</div><h2>परिचय पत्र</h2></div>
+ <div class="paper-grid">
+  <div><table class="info-table">
+   <tr><td>नाव</td><td id="o_name"></td></tr><tr><td>जन्म तारीख</td><td id="o_dob"></td></tr><tr><td>जन्म वेळ</td><td id="o_time"></td></tr><tr><td>जन्म ठिकाण</td><td id="o_birthplace"></td></tr><tr><td>वर्ण</td><td id="o_varna"></td></tr><tr><td>शिक्षण</td><td id="o_education"></td></tr><tr><td>उंची</td><td id="o_height"></td></tr><tr><td>व्यवसाय</td><td id="o_occupation"></td></tr>
+  </table></div>
+  <div><div class="photo-frame"><img id="o_photo" alt="अर्जदाराचा फोटो"></div><div class="person-name" id="o_shortname"></div></div>
+ </div>
+ <h3 class="block-title">अपेक्षा</h3><div class="expect" id="o_expectations"></div>
+ <h3 class="block-title">कुटुंबाची माहिती</h3>
+ <table class="info-table"><tr><td>वडिलांचे नाव</td><td id="o_father"></td></tr><tr><td>पत्ता</td><td id="o_address"></td></tr><tr><td>वडिलांचा व्यवसाय</td><td id="o_father_occupation"></td></tr><tr><td>शेती</td><td id="o_farming"></td></tr><tr><td>भाऊ</td><td id="o_brothers"></td></tr><tr><td>बहिणी</td><td id="o_sisters"></td></tr><tr><td>मामाचे नाव</td><td id="o_mama"></td></tr></table>
+ <h3 class="block-title">संपर्क</h3><div class="contact"><div><b>संपर्क व्यक्ती:</b> <span id="o_contact_person"></span></div><div><b>मोबाईल:</b> <span id="o_contact"></span></div></div>
+ <div class="paper-foot">बेलदार समाज • अधिक माहितीसाठी वरील संपर्क क्रमांकावर संपर्क साधा</div>
+</div></section>
 <script>
-    const el = {
-        title: document.getElementById('title'),
-        form: document.getElementById('biodataForm'),
-        photo: document.getElementById('photo'),
-        preview: document.getElementById('preview'),
-        success: document.getElementById('successMsg'),
-        biodataPrint: document.getElementById('biodataPrint'),
-        biodataPrintModern: document.getElementById('biodataPrintModern'),
-        saveJpeg: document.getElementById('saveJpeg'),
-        savePdf: document.getElementById('savePdf'),
-        downloadOptions: document.getElementById('downloadOptions'),
-        inputFormContainer: document.getElementById('inputFormContainer')
-    };
-
-    let photoURL = '';
-    let currentTemplateId = 'biodataPrint'; 
-
-    function formatDateToDDMMYY(dateStr) {
-        if (!dateStr) return '—';
-        const [y, m, d] = dateStr.split('-');
-        return `${d}/${m}/${y.slice(-2)}`;
-    }
-
-    el.preview.addEventListener('click', () => el.photo.click());
-    el.photo.addEventListener('change', () => {
-        const file = el.photo.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                el.preview.innerHTML = `<img src="${e.target.result}" alt="फोटो">`;
-                photoURL = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    function getFormData() {
-        const data = {};
-        el.form.querySelectorAll('input, select, textarea').forEach(input => {
-            if (input.id) data[input.id] = input.value.trim();
-        });
-        data.title = el.title.value;
-        return data;
-    }
-
-    function updatePrintData(templateId) {
-        const d = getFormData();
-        const suffix = templateId === 'biodataPrintModern' ? '_modern' : '';
-        const fullName = d.title ? `${d.title} ${d.name || ''}`.trim() : '';
-        const timeFormatted = d.time ? 
-            new Date('1970-01-01T' + d.time).toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', hour12: true}) 
-            : '—';
-        
-        const contactPersonDisplay = d.contact_person || 'स्वतः';
-
-        document.getElementById(`print_name${suffix}`).textContent = fullName || '—';
-        document.getElementById(`print_dob${suffix}`).textContent = formatDateToDDMMYY(d.dob);
-        document.getElementById(`print_time${suffix}`).textContent = timeFormatted;
-        document.getElementById(`print_birthplace${suffix}`).textContent = d.birthplace || '—';
-        document.getElementById(`print_varna${suffix}`).textContent = d.varna || '—';
-        document.getElementById(`print_education${suffix}`).textContent = d.education || '—';
-        document.getElementById(`print_height${suffix}`).textContent = d.height || '—'; 
-        document.getElementById(`print_occupation${suffix}`).textContent = d.occupation || '—';
-        document.getElementById(`print_expectations${suffix}`).textContent = d.expectations || '—';
-        document.getElementById(`print_father${suffix}`).textContent = d.father || '—';
-        document.getElementById(`print_address${suffix}`).innerHTML = (d.address || '—').replace(/\n/g, '<br>');
-        document.getElementById(`print_father_occupation${suffix}`).textContent = d.father_occupation || '—';
-        document.getElementById(`print_farming${suffix}`).textContent = d.farming || '—';
-        document.getElementById(`print_brothers${suffix}`).textContent = d.brothers || '—';
-        document.getElementById(`print_sisters${suffix}`).textContent = d.sisters || '—';
-        document.getElementById(`print_mama${suffix}`).textContent = d.mama || '—';
-        document.getElementById(`print_contact_person${suffix}`).textContent = contactPersonDisplay;
-        document.getElementById(`print_contact${suffix}`).textContent = d.contact || '—';
-
-        const photoImg = document.getElementById(`print_photo${suffix}`);
-        const defaultPlaceholderColor = templateId === 'biodataPrintModern' ? '#f5f5f5' : '#fdfaf5';
-        const defaultPlaceholderText = templateId === 'biodataPrintModern' ? '#333' : '#b8860b';
-        const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="100%" height="100%" fill="${defaultPlaceholderColor}"/><text x="50%" y="50%" font-family="Arial" font-size="20" fill="${defaultPlaceholderText}" text-anchor="middle" dominant-baseline="middle">Photo</text></svg>`;
-        
-        photoImg.src = photoURL || `data:image/svg+xml;utf8,${encodeURIComponent(placeholderSvg)}`;
-    }
-    
-    function setTemplateActive(templateId) {
-        el.biodataPrint.classList.remove('active');
-        el.biodataPrintModern.classList.remove('active');
-        const activeEl = document.getElementById(templateId);
-        if (activeEl) {
-            activeEl.classList.add('active');
-            currentTemplateId = templateId;
-        }
-    }
-
-    function finalizeBiodata() {
-        if (!el.title.value) {
-             alert("कृपया 'ची. / कु.' निवडा");
-             return;
-        }
-        if (!el.photo.files.length) {
-            alert("कृपया पासपोर्ट साइज फोटो निवडा.");
-            return;
-        }
-        if (!el.form.checkValidity()) {
-            el.form.reportValidity();
-            return;
-        }
-        
-        updatePrintData('biodataPrint');
-        updatePrintData('biodataPrintModern');
-
-        el.form.style.display = 'none';
-        el.success.style.display = 'block';
-        el.downloadOptions.style.display = 'none'; 
-        
-        setTemplateActive(null);
-    }
-
-    function showTemplate(template) {
-        el.success.style.display = 'none';
-        el.downloadOptions.style.display = 'block'; 
-
-        const templateId = template === 'modern' ? 'biodataPrintModern' : 'biodataPrint';
-        setTemplateActive(templateId);
-        
-        alert(`'${template === 'modern' ? 'आधुनिक' : 'पारंपरिक'}' टेम्पलेट निवडले आहे. आता तुम्ही प्रिंट किंवा डाउनलोड करू शकता.`);
-    }
-    
-    function printBiodata() {
-        window.print();
-    }
-
-    function captureAndDownload(type) {
-        if (!currentTemplateId) {
-            alert("कृपया आधी टेम्पलेट निवडा.");
-            return;
-        }
-        const element = document.getElementById(currentTemplateId).firstElementChild;
-        document.getElementById(currentTemplateId === 'biodataPrintModern' ? 'print_photo_modern' : 'print_photo').crossOrigin = 'anonymous';
-        
-        const backgroundColor = currentTemplateId === 'biodataPrintModern' ? 'white' : '#fdf6e3';
-        const name = (el.title.value + (document.getElementById('name').value || 'परिचय-पत्र')).trim() + (currentTemplateId === 'biodataPrintModern' ? '-ModernBW' : '-Traditional');
-
-        const originalParent = element.parentElement;
-        const originalStyle = {
-            position: originalParent.style.position,
-            left: originalParent.style.left
-        };
-
-        originalParent.style.position = 'static';
-        originalParent.style.left = 'auto';
-        document.body.appendChild(originalParent);
-
-        html2canvas(element, {
-            scale: 3,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: backgroundColor,
-            logging: false
-        }).then(canvas => {
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-
-            document.body.removeChild(originalParent);
-            originalParent.style.position = originalStyle.position;
-            originalParent.style.left = originalStyle.left;
-            
-            if (type === 'pdf') {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const w = pdf.internal.pageSize.getWidth();
-                const h = pdf.internal.pageSize.getHeight();
-                pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
-                pdf.save(`${name}.pdf`);
-            } else {
-                const a = document.createElement('a');
-                a.download = `${name}.jpg`;
-                a.href = imgData;
-                a.click();
-            }
-        }).catch(error => {
-            console.error('Error during canvas creation:', error);
-            alert("टेम्पलेट डाउनलोड करताना त्रुटी आली. कृपया नंतर प्रयत्न करा.");
-        });
-    }
-
-    el.savePdf.onclick = () => captureAndDownload('pdf');
-    el.saveJpeg.onclick = () => captureAndDownload('jpeg');
-
-    function resetForm() {
-        if (!confirm("सर्व डेटा डिलीट होईल?")) return;
-        el.form.reset();
-        el.title.selectedIndex = 0;
-        el.preview.innerHTML = `<i class="fas fa-camera"></i>`;
-        photoURL = '';
-        el.success.style.display = 'none';
-        el.downloadOptions.style.display = 'none';
-        el.form.style.display = 'block';
-        setTemplateActive(null);
-    }
-</script>
-
-<script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        // Path Fixed: './service-worker.js'
-        navigator.serviceWorker.register('./service-worker.js', { scope: './' })
-          .then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          })
-          .catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-      });
-    }
+(()=>{
+ const $=id=>document.getElementById(id);
+ const form=$("bioForm"),photoInput=$("photo"),preview=$("photoPreview");
+ let photoData="",selectedTemplate="traditional",ready=false;
+ const fields=["name","dob","time","birthplace","varna","education","height","occupation","expectations","father","address","father_occupation","farming","brothers","sisters","mama","contact_person","contact"];
+ const val=id=>($(id).value||"").trim();
+ const safe=id=>{const v=val(id);return v||"—"};
+ const dateFmt=s=>{if(!s)return"—";const [y,m,d]=s.split("-");return `${d}/${m}/${y}`};
+ const timeFmt=s=>{if(!s)return"—";const [h,m]=s.split(":");let n=Number(h),ampm=n>=12?"PM":"AM";n=n%12||12;return `${String(n).padStart(2,"0")}:${m} ${ampm}`};
+ photoInput.addEventListener("change",()=>{
+  const file=photoInput.files&&photoInput.files[0];if(!file)return;
+  if(!file.type.startsWith("image/")){alert("कृपया योग्य image फाईल निवडा.");photoInput.value="";return}
+  if(file.size>8*1024*1024){alert("फोटोचा आकार 8 MB पेक्षा कमी असावा.");photoInput.value="";return}
+  const reader=new FileReader();reader.onload=()=>{photoData=reader.result;preview.innerHTML="";const img=document.createElement("img");img.src=photoData;img.alt="निवडलेला फोटो";preview.appendChild(img)};reader.readAsDataURL(file);
+ });
+ function fillOutput(){
+  const title=val("title"),fullName=[title,val("name")].filter(Boolean).join(" ");
+  const values={name:fullName,dob:dateFmt(val("dob")),time:timeFmt(val("time")),birthplace:safe("birthplace"),varna:safe("varna"),education:safe("education"),height:safe("height"),occupation:safe("occupation"),expectations:safe("expectations"),father:safe("father"),address:safe("address"),father_occupation:safe("father_occupation"),farming:safe("farming"),brothers:safe("brothers"),sisters:safe("sisters"),mama:safe("mama"),contact_person:val("contact_person")||"स्वतः",contact:safe("contact")};
+  Object.entries(values).forEach(([key,value])=>$("o_"+key).textContent=value);
+  $("o_shortname").textContent=fullName;
+  $("o_photo").src=photoData;
+ }
+ form.addEventListener("submit",e=>{
+  e.preventDefault();
+  if(!form.reportValidity())return;
+  if(!photoData){alert("कृपया पासपोर्ट साइज फोटो निवडा.");return}
+  fillOutput();ready=true;$("success").style.display="block";$("downloads").style.display="none";
+  $("success").scrollIntoView({behavior:"smooth",block:"center"});
+ });
+ document.querySelectorAll("[data-template]").forEach(btn=>btn.addEventListener("click",()=>{
+  selectedTemplate=btn.dataset.template;$("paper").classList.toggle("modern",selectedTemplate==="modern");
+  $("success").style.display="none";$("downloads").style.display="block";
+ }));
+ $("editBtn").addEventListener("click",()=>{$("downloads").style.display="none";$("success").style.display="none";form.scrollIntoView({behavior:"smooth",block:"start"})});
+ function fileBase(){return (val("name")||"parichay-patra").replace(/[\\/:*?"<>|]/g,"-").replace(/\s+/g,"-")}
+ async function makeCanvas(){
+  if(!ready){alert("आधी परिचय पत्र तयार करा.");return null}
+  if(typeof html2canvas==="undefined"){alert("डाउनलोड लायब्ररी लोड झाली नाही. इंटरनेट सुरू करून पेज पुन्हा उघडा.");return null}
+  const out=$("output");out.style.position="fixed";out.style.left="0";out.style.top="0";out.style.zIndex="-1";out.style.opacity="1";
+  try{return await html2canvas($("paper"),{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false})}
+  finally{out.style.left="-12000px";out.style.top="0";out.style.zIndex="";out.style.opacity=""}
+ }
+ $("jpegBtn").addEventListener("click",async()=>{const canvas=await makeCanvas();if(!canvas)return;const a=document.createElement("a");a.download=fileBase()+".jpg";a.href=canvas.toDataURL("image/jpeg",.96);a.click()});
+ $("pdfBtn").addEventListener("click",async()=>{const canvas=await makeCanvas();if(!canvas)return;if(!window.jspdf){alert("PDF लायब्ररी लोड झाली नाही. इंटरनेट तपासा.");return}const {jsPDF}=window.jspdf;const pdf=new jsPDF("p","mm","a4");const img=canvas.toDataURL("image/jpeg",.96);const w=pdf.internal.pageSize.getWidth(),h=pdf.internal.pageSize.getHeight();pdf.addImage(img,"JPEG",0,0,w,h);pdf.save(fileBase()+".pdf")});
+ $("printBtn").addEventListener("click",()=>{if(!ready)return;window.print()});
+ $("resetBtn").addEventListener("click",()=>{if(!confirm("भरलेली सर्व माहिती आणि फोटो पुसायचे आहेत का?"))return;setTimeout(()=>{photoData="";ready=false;preview.textContent="📷";$("success").style.display="none";$("downloads").style.display="none";$("paper").classList.remove("modern")},0)});
+})();
 </script>
 </body>
 </html>
